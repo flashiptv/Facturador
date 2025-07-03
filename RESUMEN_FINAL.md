@@ -171,18 +171,25 @@ La aplicación incluye datos de ejemplo para pruebas inmediatas:
 
 ## ⚠️ Nota sobre Build de Instalador
 
-El comando `npm run build` presenta problemas de compilación de módulos nativos (sqlite3, bcrypt) en Windows. Esto es común y se debe a:
+El comando `npm run build` presenta problemas de compilación de módulos nativos (principalmente `better-sqlite3`, que es el paquete usado para SQLite) en Windows. Esto es común y se debe a:
 
-1. **sqlite3**: Necesita Visual Studio Build Tools para compilación nativa
-2. **bcrypt**: Requiere herramientas de compilación C++
+1. **`better-sqlite3` (para SQLite)**: Este módulo nativo necesita una versión binaria compatible con Electron o ser compilado desde fuente.
+    *   **Configuración del Proyecto para Builds**: El archivo `package.json` está configurado para que `electron-builder` intente descargar y usar binarios precompilados para `better-sqlite3`. Esto se gestiona a través del script `postinstall` (`electron-builder install-app-deps`) y las opciones de build (`"nodeGypRebuild": false`, `"npmRebuild": false`, `"buildDependenciesFromSource": false`). Esta es la forma preferida y debería evitar la necesidad de compilación local.
+    *   **Si la compilación local es necesaria**: Solo si la descarga de binarios precompilados falla (por problemas de red, entorno, o falta de un binario para la versión específica de Electron/Node.js), se intentaría una compilación desde fuente. En Windows, esto requeriría Visual Studio Build Tools (con la carga de trabajo "Desarrollo de escritorio con C++") y Python.
+2. **`bcryptjs` (usado en el proyecto)**: Es importante notar que el proyecto utiliza `bcryptjs`, que es una implementación pura en JavaScript de bcrypt. **`bcryptjs` no requiere herramientas de compilación C++** y no causará problemas de compilación de módulos nativos.
 
-### Soluciones Alternativas:
-1. **Usar en modo desarrollo**: `npm start` (funciona perfectamente)
-2. **Instalar Visual Studio Build Tools** y volver a intentar
-3. **Usar versiones precompiladas** de las dependencias
-4. **Portable**: Comprimir la carpeta completa para distribución
+### Troubleshooting para el Build (`npm run build`):
+1. **Entorno Limpio**: Antes de ejecutar `npm run build`, asegúrate de tener un entorno limpio. Considera eliminar `node_modules`, `package-lock.json` y la caché de npm/electron-builder:
+    *   Elimina `node_modules` y `package-lock.json`.
+    *   Limpia la caché de npm: `npm cache clean --force`.
+    *   Limpia la caché de electron-builder (ubicaciones comunes: `C:\Users\<user>\AppData\Local\electron-builder\cache` en Windows, `~/.cache/electron-builder` en Linux, `~/Library/Caches/electron-builder` en macOS).
+    *   Reinstala dependencias: `npm install`. Observa la salida del script `postinstall` para asegurar que `electron-builder install-app-deps` se ejecuta sin errores, especialmente para `better-sqlite3`.
+2. **Conexión a Internet**: Asegúrate de tener una conexión a internet estable y sin restricciones que puedan impedir la descarga de binarios precompilados.
+3. **Usar en Modo Desarrollo**: `npm start` permite usar la aplicación completamente funcional sin necesidad de pasar por el proceso de build completo.
+4. **Instalar Visual Studio Build Tools**: Si los pasos anteriores no resuelven el problema y la compilación desde fuente es inevitable para `better-sqlite3`, instala Visual Studio Build Tools (asegúrate de incluir la carga de trabajo "Desarrollo de escritorio con C++") y Python (compatible con `node-gyp`).
+5. **Build Portable**: Si el instalador completo falla, `npm run build-portable` (o `electron-builder --win portable` si se ajusta el script) podría ser una alternativa para generar una versión portable que no requiera instalación, aunque aún depende de la compilación exitosa de módulos nativos.
 
-La aplicación **funciona perfectamente en modo desarrollo** y es completamente funcional.
+La aplicación **funciona perfectamente en modo desarrollo (`npm start`)** y es completamente funcional en ese contexto. Los desafíos de build se centran en el empaquetado para distribución.
 
 ## 🎉 Conclusión
 
