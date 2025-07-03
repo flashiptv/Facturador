@@ -1,0 +1,47 @@
+{
+  "name": "facturador-app",
+  "version": "1.0.0",
+  "description": "Aplicación de facturación para Windows",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build-portable": "electron-builder --win portable",
+    "dist": "npm run build",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "author": "Nick",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.1",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.4.3",
+    "electron-store": "^8.1.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
+    "puppeteer": "^24.11.2"
+  },
+  "build": {
+    "appId": "com.nick.facturador",
+    "productName": "Facturador",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/.cache",
+      "!.git"
+    ],
+    "nodeGypRebuild": false,
+    "npmRebuild": false,
+    "buildDependenciesFromSource": false,
+    "win": {
+      "target": "portable"
+    }
+  }
+}

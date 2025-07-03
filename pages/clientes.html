@@ -1,0 +1,327 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>Facturador Pro - Clientes</title>
+    <link rel="icon" type="image/x-icon" href="../assets/icon.ico" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/app.js"></script>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-gray-50 group/design-root overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <div class="gap-1 px-6 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col w-80">
+            <div class="flex h-full min-h-[700px] flex-col justify-between bg-gray-50 p-4">
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-[#dce8f3] rounded-lg" data-navigate="totalfacturas">
+                    <div class="text-[#101518]" data-icon="House" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M218.83,103.77l-80-75.48a1.14,1.14,0,0,1-.11-.11,16,16,0,0,0-21.53,0l-.11.11L37.17,103.77A16,16,0,0,0,32,115.55V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V160h32v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V115.55A16,16,0,0,0,218.83,103.77ZM208,208H160V160a16,16,0,0,0-16-16H112a16,16,0,0,0-16,16v48H48V115.55l.11-.1L128,40l79.9,75.43.11.1Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#101518] text-sm font-medium leading-normal">Panel</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#101518]" data-icon="File" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#101518] text-sm font-medium leading-normal">Documentos</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2 rounded-xl bg-[#eaedf1]">
+                    <div class="text-[#101518]" data-icon="Users" data-size="24px" data-weight="fill">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M164.47,195.63a8,8,0,0,1-6.7,12.37H10.23a8,8,0,0,1-6.7-12.37,95.83,95.83,0,0,1,47.22-37.71,60,60,0,1,1,66.5,0A95.83,95.83,0,0,1,164.47,195.63Zm87.91-.15a95.87,95.87,0,0,0-47.13-37.56A60,60,0,0,0,144.7,54.59a4,4,0,0,0-1.33,6A75.83,75.83,0,0,1,147,150.53a4,4,0,0,0,1.07,5.53,112.32,112.32,0,0,1,29.85,30.83,23.92,23.92,0,0,1,3.65,16.47,4,4,0,0,0,3.95,4.64h60.3a8,8,0,0,0,7.73-5.93A8.22,8.22,0,0,0,252.38,195.48Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#101518] text-sm font-medium leading-normal">Clientes</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#101518]" data-icon="ListBullets" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M80,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm136,56H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM44,52A12,12,0,1,0,56,64,12,12,0,0,0,44,52Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,116Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,180Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#101518] text-sm font-medium leading-normal">Artículos</p>
+                  </div>
+                  <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="text-[#101518]" data-icon="Gear" data-size="24px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p class="text-[#101518] text-sm font-medium leading-normal">Ajustes</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="flex flex-wrap justify-between gap-3 p-4">
+              <p class="text-[#101518] tracking-light text-[32px] font-bold leading-tight min-w-72">Clientes</p>
+              <button
+                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-[#0b80ee] text-white text-sm font-medium leading-normal hover:bg-[#0970d3]"
+                onclick="showNewClientModal()"
+              >
+                <span class="truncate">Nuevo Cliente</span>
+              </button>
+            </div>
+            <div class="px-4 py-3">
+              <label class="flex flex-col min-w-40 h-12 w-full">
+                <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+                  <div
+                    class="text-[#5c748a] flex border-none bg-[#eaedf1] items-center justify-center pl-4 rounded-l-xl border-r-0"
+                    data-icon="MagnifyingGlass"
+                    data-size="24px"
+                    data-weight="regular"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                      <path
+                        d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    placeholder="Buscar clientes por nombre, email o teléfono"
+                    data-search="clients"
+                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#101518] focus:outline-0 focus:ring-0 border-none bg-[#eaedf1] focus:border-none h-full placeholder:text-[#5c748a] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+                  />
+                </div>
+              </label>
+            </div>
+            <div class="px-4 py-3 @container">
+              <div class="flex overflow-hidden rounded-xl border border-[#d4dce2] bg-gray-50">
+                <table class="flex-1">
+                  <thead>
+                    <tr class="bg-gray-50">
+                      <th class="px-4 py-3 text-left text-[#101518] text-sm font-medium leading-normal">Nombre</th>
+                      <th class="px-4 py-3 text-left text-[#101518] text-sm font-medium leading-normal">
+                        Correo electrónico
+                      </th>
+                      <th class="px-4 py-3 text-left text-[#101518] text-sm font-medium leading-normal">
+                        Teléfono
+                      </th>
+                      <th class="px-4 py-3 text-left text-[#101518] text-sm font-medium leading-normal">
+                        Dirección
+                      </th>
+                      <th class="px-4 py-3 text-left text-[#101518] text-sm font-medium leading-normal">
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Los clientes se cargarán dinámicamente aquí -->
+                  </tbody>
+                </table>
+              </div>
+              <style>
+                          @container(max-width:120px){.table-6b8a5381-2461-405c-aa02-6d17dd3710b8-column-120{display: none;}}
+                @container(max-width:240px){.table-6b8a5381-2461-405c-aa02-6d17dd3710b8-column-240{display: none;}}
+                @container(max-width:360px){.table-6b8a5381-2461-405c-aa02-6d17dd3710b8-column-360{display: none;}}
+                @container(max-width:480px){.table-6b8a5381-2461-405c-aa02-6d17dd3710b8-column-480{display: none;}}
+                @container(max-width:600px){.table-6b8a5381-2461-405c-aa02-6d17dd3710b8-column-600{display: none;}}
+              </style>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para nuevo cliente -->
+    <div id="newClientModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+      <div class="bg-white rounded-xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-[#101518]">Nuevo Cliente</h3>
+          <button onclick="hideNewClientModal()" class="text-gray-500 hover:text-gray-700">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm40,144.49L159.51,177,128,145.51,96.49,177,87,167.51,118.49,136,87,104.49,96.49,95,128,126.51,159.51,95,169,104.49,137.51,136,169,167.51Z"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <form data-form-type="client" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-[#101518] mb-1">Nombre *</label>
+              <input
+                name="nombre"
+                type="text"
+                required
+                placeholder="Nombre del cliente"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-[#101518] mb-1">Email</label>
+              <input
+                name="email"
+                type="email"
+                placeholder="email@ejemplo.com"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-[#101518] mb-1">Teléfono</label>
+              <input
+                name="telefono"
+                type="tel"
+                placeholder="555-123-4567"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-[#101518] mb-1">NIF/CIF</label>
+              <input
+                name="nif_cif"
+                type="text"
+                placeholder="12345678A o B12345678"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-[#101518] mb-1">Dirección</label>
+            <input
+              name="direccion"
+              type="text"
+              placeholder="Calle, número, etc."
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-[#101518] mb-1">Ciudad</label>
+              <input
+                name="ciudad"
+                type="text"
+                placeholder="Madrid, Barcelona, etc."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-[#101518] mb-1">Código Postal</label>
+              <input
+                name="codigo_postal"
+                type="text"
+                placeholder="28001"
+                pattern="[0-9]{5}"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-[#101518] mb-1">Notas</label>
+            <textarea
+              name="notas"
+              placeholder="Información adicional sobre el cliente..."
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            ></textarea>
+          </div>
+          
+          <div class="flex gap-3 pt-4">
+            <button
+              type="button"
+              onclick="hideNewClientModal()"
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="flex-1 px-4 py-2 bg-[#0b80ee] text-white rounded-lg hover:bg-[#0970d3]"
+            >
+              Guardar Cliente
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function showNewClientModal() {
+        const modal = document.getElementById('newClientModal');
+        const form = document.querySelector('[data-form-type="client"]');
+        
+        // Limpiar formulario
+        if (form) {
+          form.reset();
+          form.removeAttribute('data-edit-id');
+        }
+        
+        // Cambiar título a "Nuevo Cliente"
+        document.querySelector('#newClientModal h3').textContent = 'Nuevo Cliente';
+        
+        modal.classList.remove('hidden');
+      }
+      
+      function hideNewClientModal() {
+        const modal = document.getElementById('newClientModal');
+        const form = document.querySelector('[data-form-type="client"]');
+        
+        // Limpiar formulario
+        if (form) {
+          form.reset();
+          form.removeAttribute('data-edit-id');
+          
+          // Limpiar errores de validación
+          const errorElements = form.querySelectorAll('.field-error');
+          errorElements.forEach(error => error.remove());
+          
+          const inputsWithErrors = form.querySelectorAll('.border-red-500');
+          inputsWithErrors.forEach(input => {
+            input.classList.remove('border-red-500', 'border-2');
+          });
+        }
+        
+        modal.classList.add('hidden');
+      }
+      
+      // Cerrar modal con Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('newClientModal');
+          if (!modal.classList.contains('hidden')) {
+            hideNewClientModal();
+          }
+        }
+      });
+
+      // Cerrar modal al hacer clic fuera
+      document.getElementById('newClientModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          hideNewClientModal();
+        }
+      });
+    </script>
+  </body>
+</html>

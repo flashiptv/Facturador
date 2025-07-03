@@ -1,0 +1,7 @@
+<!-- Este es un placeholder para el icono SVG que será convertido a ICO -->
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#0b80ee"/>
+  <path d="M64 96h128v64H64z" fill="white"/>
+  <path d="M80 112h96v32H80z" fill="#0b80ee"/>
+  <text x="128" y="200" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">F</text>
+</svg>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>Subir Archivos - Facturador</title>
+    <link rel="icon" type="image/x-icon" href="../assets/icon.svg" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-gray-50 group/design-root overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <!-- Header -->
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#eaedf1] px-10 py-3">
+          <div class="flex items-center gap-4 text-[#101518]">
+            <div class="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path></svg>
+            </div>
+            <h2 class="text-[#101518] text-lg font-bold leading-tight tracking-[-0.015em]">Facturador</h2>
+          </div>
+          <div class="flex flex-1 justify-end gap-8">
+            <div class="flex items-center gap-6">
+              <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="clientes">Clientes</button>
+              <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="appfacturas">Nueva Factura</button>
+              <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="totalfacturas">Facturas</button>
+              <button class="text-blue-600 text-sm font-bold leading-normal" data-navigate="subir archivos">Archivos</button>
+            </div>
+            <button
+              class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#eaedf1] text-[#101518] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+              onclick="showHelpModal()"
+            >
+              <div class="text-[#101518]" data-icon="Question" data-size="20px" data-weight="regular">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                  <path
+                    d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"
+                  ></path>
+                </svg>
+              </div>
+              Ayuda
+            </button>
+            <div id="userProfile" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-gray-300 flex items-center justify-center cursor-pointer">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM74.08,197.5a64,64,0,0,1,107.84,0,87.83,87.83,0,0,1-107.84,0ZM96,120a32,32,0,1,1,32,32A32,32,0,0,1,96,120Zm97.76,66.41a79.66,79.66,0,0,0-36.06-28.75,48,48,0,1,0-59.4,0,79.66,79.66,0,0,0-36.06,28.75,88,88,0,1,1,131.52,0Z"></path>
+              </svg>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex h-full">
+          <!-- Sidebar -->
+          <nav class="w-64 bg-white border-r border-gray-200 p-4">
+            <div class="space-y-2">
+              <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="clientes">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"></path>
+                  </svg>
+                  Clientes
+                </div>
+              </button>
+              <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="appfacturas">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path>
+                  </svg>
+                  Nueva Factura
+                </div>
+              </button>
+              <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="totalfacturas">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Z"></path>
+                  </svg>
+                  Facturas
+                </div>
+              </button>
+              <button class="w-full text-left px-4 py-2 text-sm font-medium bg-blue-100 text-blue-700 rounded-lg" data-navigate="subir archivos">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M224,152a8,8,0,0,1-8,8H192v16a8,8,0,0,1-16,0V160H152a8,8,0,0,1,0-16h24V128a8,8,0,0,1,16,0v16h24A8,8,0,0,1,224,152ZM48,180H76.69L132.69,124a12,12,0,0,1,17,0L176,150.34A8,8,0,1,0,187.31,139L161,112.69a28,28,0,0,0-39.6,0L84.69,150l-15-15A12,12,0,0,0,52.69,135L28,159.65A8,8,0,0,0,39.31,171l20-20,52,52A8,8,0,0,0,117,200H48a8,8,0,0,1,0-16ZM96,88a24,24,0,1,0-24-24A24,24,0,0,0,96,88Z"></path>
+                  </svg>
+                  Gestión de Archivos
+                </div>
+              </button>
+              <hr class="my-4">
+              <button class="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg" id="logoutBtn">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M112,216a8,8,0,0,1-8,8H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h56a8,8,0,0,1,0,16H48V208h56A8,8,0,0,1,112,216Zm109.66-93.66-40-40a8,8,0,0,0-11.32,11.32L196.69,120H104a8,8,0,0,0,0,16h92.69l-26.35,26.34a8,8,0,0,0,11.32,11.32l40-40A8,8,0,0,0,221.66,122.34Z"></path>
+                  </svg>
+                  Cerrar Sesión
+                </div>
+              </button>
+            </div>
+          </nav>
+
+          <!-- Content Area -->
+          <div class="flex-1 px-8 py-6">
+            <div class="max-w-4xl mx-auto">
+              <!-- Header -->
+              <div class="flex flex-wrap justify-between gap-3 mb-6">
+                <div>
+                  <h1 class="text-[#101518] tracking-light text-[32px] font-bold leading-tight">Gestión de Archivos</h1>
+                  <p class="text-[#5c748a] text-sm font-normal leading-normal">Sube y gestiona archivos relacionados con tus facturas y documentos</p>
+                </div>
+              </div>
+
+              <!-- Upload Area -->
+              <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                <div class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-[#d4dce2] px-6 py-14" id="dropZone">
+                  <div class="flex max-w-[480px] flex-col items-center gap-2">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 256 256" class="text-gray-400">
+                      <path d="M224,152a8,8,0,0,1-8,8H192v16a8,8,0,0,1-16,0V160H152a8,8,0,0,1,0-16h24V128a8,8,0,0,1,16,0v16h24A8,8,0,0,1,224,152ZM48,180H76.69L132.69,124a12,12,0,0,1,17,0L176,150.34A8,8,0,1,0,187.31,139L161,112.69a28,28,0,0,0-39.6,0L84.69,150l-15-15A12,12,0,0,0,52.69,135L28,159.65A8,8,0,0,0,39.31,171l20-20,52,52A8,8,0,0,0,117,200H48a8,8,0,0,1,0-16ZM96,88a24,24,0,1,0-24-24A24,24,0,0,0,96,88Z"></path>
+                    </svg>
+                    <p class="text-[#101518] text-lg font-bold leading-tight tracking-[-0.015em] max-w-[480px] text-center">Arrastra y suelta tus archivos aquí</p>
+                    <p class="text-[#101518] text-sm font-normal leading-normal max-w-[480px] text-center">Formatos compatibles: JPG, PNG, PDF, DOCX, XLSX (Máximo 10MB por archivo)</p>
+                  </div>
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-blue-600 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700"
+                    id="selectFilesBtn"
+                  >
+                    <span class="truncate">Buscar archivos</span>
+                  </button>
+                  <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.docx,.xlsx" class="hidden">
+                </div>
+                
+                <!-- Upload Progress -->
+                <div id="uploadProgress" class="mt-4 hidden">
+                  <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                  </div>
+                  <p class="text-sm text-gray-600 mt-2" id="uploadStatus">Subiendo archivos...</p>
+                </div>
+              </div>
+
+              <!-- Files List -->
+              <div class="bg-white rounded-lg border border-gray-200">
+                <div class="p-4 border-b border-gray-200">
+                  <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-900">Archivos Subidos</h2>
+                    <div class="flex gap-2">
+                      <button class="text-sm text-gray-600 hover:text-gray-800" id="sortByName">Nombre</button>
+                      <button class="text-sm text-gray-600 hover:text-gray-800" id="sortByDate">Fecha</button>
+                      <button class="text-sm text-gray-600 hover:text-gray-800" id="sortBySize">Tamaño</button>
+                    </div>
+                  </div>
+                  
+                  <!-- Search -->
+                  <div class="mt-4">
+                    <input 
+                      type="text" 
+                      id="searchFiles" 
+                      placeholder="Buscar archivos..."
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                  </div>
+                </div>
+                
+                <div id="filesList" class="divide-y divide-gray-200">
+                  <!-- Los archivos se cargarán dinámicamente aquí -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="emptyFilesState" class="p-8 text-center">
+                  <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  <h3 class="mt-2 text-sm font-medium text-gray-900">No hay archivos</h3>
+                  <p class="mt-1 text-sm text-gray-500">Comienza subiendo tus primeros archivos.</p>
+                </div>
+              </div>
+
+              <!-- Terms -->
+              <p class="text-[#5c748a] text-sm font-normal leading-normal pt-4 text-center">
+                Al subir archivos, aceptas nuestros Términos de Servicio y Política de Privacidad. Los archivos se almacenan localmente en tu dispositivo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Preview Modal -->
+    <div id="filePreviewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+          <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="text-lg font-semibold" id="previewFileName">Previsualización de archivo</h3>
+            <button class="text-gray-400 hover:text-gray-600" id="closePreviewModal">
+              <svg width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="p-4 overflow-auto max-h-[70vh]" id="previewContent">
+            <!-- El contenido de previsualización se cargará aquí -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Scripts -->
+    <script src="../js/app.js"></script>
+    <script src="../js/fileManager.js"></script>
+    <script>
+      function showHelpModal() {
+        const helpContent = `
+          <h2 class="text-lg font-bold mb-4">Ayuda - Gestión de Archivos</h2>
+          <div class="space-y-4">
+            <div>
+              <h3 class="font-semibold">¿Cómo subir archivos?</h3>
+              <p class="text-sm text-gray-600">Puedes subir archivos de dos formas:</p>
+              <ul class="text-sm text-gray-600 ml-4 list-disc">
+                <li>Arrastra y suelta los archivos en el área marcada</li>
+                <li>Haz clic en "Buscar archivos" para seleccionar desde tu computadora</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-semibold">Formatos admitidos:</h3>
+              <p class="text-sm text-gray-600">JPG, PNG, PDF, DOCX, XLSX (máximo 10MB por archivo)</p>
+            </div>
+            <div>
+              <h3 class="font-semibold">Gestión de archivos:</h3>
+              <ul class="text-sm text-gray-600 ml-4 list-disc">
+                <li>Ver: Previsualiza el archivo en una ventana modal</li>
+                <li>Descargar: Guarda una copia en tu computadora</li>
+                <li>Eliminar: Borra permanentemente el archivo</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-6 text-center">
+            <button onclick="this.closest('.fixed').style.display='none'" 
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              Cerrar
+            </button>
+          </div>
+        `;
+        
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+        modal.innerHTML = `
+          <div class="bg-white rounded-lg p-6 max-w-lg mx-4">
+            ${helpContent}
+          </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Cerrar al hacer clic fuera
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.remove();
+          }
+        });
+      }
+    </script>
+  </body>
