@@ -1,0 +1,9 @@
+# Builds
+dist/
+*.exe
+
+# Node modules
+node_modules/
+
+# Electron output
+*.asar
