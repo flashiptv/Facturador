@@ -226,16 +226,16 @@ class SQLiteDatabase {
     async createUser(userData) {
         const sql = `INSERT INTO users (email, name, password, role) VALUES (?, ?, ?, ?)`;
         const result = await this.run(sql, [userData.email, userData.name, userData.password, userData.role || 'user']);
-        return this.getUserById(result.id);
+        return this.getUserById(result.lastInsertRowid); // Corrected to use lastInsertRowid
     }
 
     async getUserByEmail(email) {
-        const query = `SELECT * FROM users WHERE email = ? AND activo = 1`;
+        const query = `SELECT * FROM users WHERE email = ?`; // Removed 'AND activo = 1' as 'activo' column doesn't exist in schema
         return await this.get(query, [email]);
     }
 
     async getUserById(id) {
-        const query = `SELECT * FROM users WHERE id = ? AND activo = 1`;
+        const query = `SELECT * FROM users WHERE id = ?`; // Removed 'AND activo = 1' as 'activo' column doesn't exist in schema
         return await this.get(query, [id]);
     }
 
