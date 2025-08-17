@@ -13,7 +13,10 @@
 
     <title>Nueva Factura - Facturador</title>
     <link rel="icon" type="image/x-icon" href="../assets/icon.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- TODO: Migrate to local Tailwind CSS build for production -->
+    <!-- See: https://tailwindcss.com/docs/installation -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   </head>
   <body>
@@ -30,9 +33,12 @@
           <div class="flex flex-1 justify-end gap-8">
             <div class="flex items-center gap-6">
               <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="clientes">Clientes</button>
+              <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="presupuestos">Presupuestos</button>
               <button class="text-blue-600 text-sm font-bold leading-normal" data-navigate="appfacturas">Nueva Factura</button>
               <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="totalfacturas">Facturas</button>
+              <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="productos">Artículos</button>
               <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="subir archivos">Archivos</button>
+              <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="ajustes">Ajustes</button>
             </div>
             <div id="userProfile" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-gray-300 flex items-center justify-center cursor-pointer">
               <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
@@ -53,6 +59,14 @@
                     <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"></path>
                   </svg>
                   Clientes
+                </div>
+              </button>
+              <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="presupuestos">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128ZM184,32H72A16,16,0,0,0,56,48V208a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V48A16,16,0,0,0,184,32Z"></path>
+                  </svg>
+                  Presupuestos
                 </div>
               </button>
               <button class="w-full text-left px-4 py-2 text-sm font-medium bg-blue-100 text-blue-700 rounded-lg" data-navigate="appfacturas">
@@ -77,6 +91,22 @@
                     <path d="M224,152a8,8,0,0,1-8,8H192v16a8,8,0,0,1-16,0V160H152a8,8,0,0,1,0-16h24V128a8,8,0,0,1,16,0v16h24A8,8,0,0,1,224,152ZM48,180H76.69L132.69,124a12,12,0,0,1,17,0L176,150.34A8,8,0,1,0,187.31,139L161,112.69a28,28,0,0,0-39.6,0L84.69,150l-15-15A12,12,0,0,0,52.69,135L28,159.65A8,8,0,0,0,39.31,171l20-20,52,52A8,8,0,0,0,117,200H48a8,8,0,0,1,0-16ZM96,88a24,24,0,1,0-24-24A24,24,0,0,0,96,88Z"></path>
                   </svg>
                   Gestión de Archivos
+                </div>
+              </button>
+              <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="productos">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M80,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm136,56H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM44,52A12,12,0,1,0,56,64,12,12,0,0,0,44,52Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,116Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,180Z"></path>
+                  </svg>
+                  Artículos
+                </div>
+              </button>
+              <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="ajustes">
+                <div class="flex items-center gap-3">
+                  <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25a8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88a8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"></path>
+                  </svg>
+                  Ajustes
                 </div>
               </button>
               <hr class="my-4">
@@ -107,9 +137,160 @@
                   <button id="previewBtn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
                     Vista Previa
                   </button>
+                  <button id="printBtn" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors" title="Imprimir factura">
+                    <i class="fas fa-print mr-1"></i> Imprimir
+                  </button>
+                  <button id="exportPdfBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors" title="Exportar como PDF">
+                    <i class="fas fa-file-pdf mr-1"></i> PDF
+                  </button>
                   <button id="saveInvoiceBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
                     Generar Factura
                   </button>
+                </div>
+              </div>
+
+              <!-- Template Selector -->
+              <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-1">Modelo de Factura</h3>
+                    <p class="text-sm text-gray-600">Selecciona el diseño de plantilla para tu factura</p>
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <label for="templateSelect" class="text-sm font-medium text-gray-700">Plantilla:</label>
+                    <select id="templateSelect" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[200px]">
+                      <option value="factura-profesional">🏢 Profesional (Recomendada)</option>
+                      <option value="factura-template">📄 Clásica</option>
+                      <option value="factura-minimalista">✨ Minimalista</option>
+                      <option value="factura-moderna">🎨 Moderna</option>
+                      <option value="factura-personalizada">🎯 Personalizada</option>
+                    </select>
+                    <button id="previewTemplateBtn" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm">
+                      <i class="fas fa-eye mr-1"></i> Vista Previa
+                    </button>
+                    <button id="uploadTemplateBtn" class="bg-purple-500 text-white px-3 py-2 rounded-lg hover:bg-purple-600 transition-colors text-sm">
+                      <i class="fas fa-upload mr-1"></i> Subir Modelo
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Custom Template Upload Section -->
+                <div id="customTemplateSection" class="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200 hidden">
+                  <h4 class="text-lg font-semibold text-purple-800 mb-2">
+                    <i class="fas fa-magic mr-2"></i>Crear Plantilla Personalizada
+                  </h4>
+                  <p class="text-sm text-purple-700 mb-4">
+                    Sube una imagen de referencia del modelo de factura que quieres y nuestro sistema creará una plantilla similar.
+                  </p>
+                  
+                  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- Upload Area -->
+                    <div>
+                      <label class="block text-sm font-medium text-purple-700 mb-2">Imagen de Referencia</label>
+                      <div id="templateImageDropZone" class="border-2 border-dashed border-purple-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors cursor-pointer">
+                        <div id="dropZoneContent">
+                          <i class="fas fa-cloud-upload-alt text-3xl text-purple-400 mb-2"></i>
+                          <p class="text-purple-600 font-medium">Arrastra tu imagen aquí</p>
+                          <p class="text-sm text-purple-500 mt-1">o haz clic para seleccionar</p>
+                          <p class="text-xs text-purple-400 mt-2">JPG, PNG, PDF - Máx. 10MB</p>
+                        </div>
+                        <input type="file" id="templateImageInput" class="hidden" accept="image/*,.pdf">
+                      </div>
+                      
+                      <!-- Preview uploaded image -->
+                      <div id="uploadedImagePreview" class="mt-3 hidden">
+                        <img id="previewImage" class="w-full h-40 object-contain border rounded-lg bg-white">
+                        <div class="flex justify-between items-center mt-2">
+                          <span id="imageName" class="text-sm text-gray-600"></span>
+                          <button id="removeImageBtn" class="text-red-500 hover:text-red-700 text-sm">
+                            <i class="fas fa-times mr-1"></i>Quitar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Configuration -->
+                    <div>
+                      <label class="block text-sm font-medium text-purple-700 mb-2">Configuración</label>
+                      <div class="space-y-3">
+                        <div>
+                          <label for="templateName" class="block text-xs font-medium text-purple-600 mb-1">Nombre de la plantilla</label>
+                          <input 
+                            type="text" 
+                            id="customTemplateName" 
+                            placeholder="Mi Plantilla Personalizada"
+                            class="w-full px-3 py-2 text-sm border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                          >
+                        </div>
+                        
+                        <div>
+                          <label for="templateStyle" class="block text-xs font-medium text-purple-600 mb-1">Estilo base</label>
+                          <select id="customTemplateStyle" class="w-full px-3 py-2 text-sm border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <option value="profesional">Basado en Profesional</option>
+                            <option value="minimalista">Basado en Minimalista</option>
+                            <option value="moderno">Basado en Moderno</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label class="block text-xs font-medium text-purple-600 mb-1">Características</label>
+                          <div class="space-y-1">
+                            <label class="flex items-center">
+                              <input type="checkbox" id="includeHeader" checked class="mr-2 text-purple-500">
+                              <span class="text-xs text-purple-700">Incluir cabecera con logo</span>
+                            </label>
+                            <label class="flex items-center">
+                              <input type="checkbox" id="includeFooter" checked class="mr-2 text-purple-500">
+                              <span class="text-xs text-purple-700">Incluir pie de página</span>
+                            </label>
+                            <label class="flex items-center">
+                              <input type="checkbox" id="coloredHeaders" class="mr-2 text-purple-500">
+                              <span class="text-xs text-purple-700">Encabezados con color</span>
+                            </label>
+                          </div>
+                        </div>
+
+                        <button id="generateCustomTemplateBtn" class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                          <i class="fas fa-magic mr-2"></i>Generar Plantilla
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Progress indicator -->
+                  <div id="templateGenerationProgress" class="mt-4 hidden">
+                    <div class="bg-white rounded-lg p-3 border">
+                      <div class="flex items-center">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600 mr-3"></div>
+                        <span class="text-sm text-gray-700">Analizando imagen y generando plantilla...</span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div id="progressBar" class="bg-purple-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                
+                <!-- Template Preview -->
+                <div id="templatePreview" class="mt-4 p-3 bg-gray-50 rounded-lg border hidden">
+                  <div class="flex items-start gap-3">
+                    <div class="w-16 h-20 bg-white border-2 border-gray-200 rounded shadow-sm flex-shrink-0">
+                      <div class="h-full bg-gradient-to-b from-blue-50 to-gray-50"></div>
+                    </div>
+                    <div>
+                      <h4 id="templateName" class="font-medium text-gray-800">Plantilla Profesional</h4>
+                      <p id="templateDescription" class="text-sm text-gray-600 mt-1">
+                        Diseño elegante con cabecera empresarial, tablas organizadas y pie de página profesional. 
+                        Ideal para empresas y profesionales.
+                      </p>
+                      <div class="flex gap-2 mt-2">
+                        <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">✓ Optimizada A4</span>
+                        <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">✓ Impresión</span>
+                        <span class="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded">✓ PDF</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -432,11 +613,16 @@
 
     <!-- Scripts -->
     <script src="../js/app.js"></script>
+    <script src="../js/facturaTemplateManager.js"></script>
+    <script src="../js/pdfExporter.js"></script>
+    <script src="../js/invoicePreviewManager.js"></script>
     <script>
       // Invoice-specific functionality
+      // Usar ipcRenderer del app.js que ya está cargado
       class InvoiceManager {
         constructor() {
           this.lineCounter = 0;
+          this.selectedTemplate = 'factura-profesional'; // Plantilla por defecto
           this.init();
         }
 
@@ -459,7 +645,24 @@
               const option = document.createElement('option');
               option.value = client.id;
               option.textContent = client.nombre;
-              option.dataset.clientData = JSON.stringify(client);
+              
+              // Validar que el cliente tenga datos válidos antes de serializar
+              try {
+                const clientDataString = JSON.stringify(client);
+                option.dataset.clientData = clientDataString;
+              } catch (error) {
+                console.error('Error al serializar datos del cliente:', error, client);
+                // Usar datos básicos si hay error en la serialización
+                option.dataset.clientData = JSON.stringify({
+                  id: client.id,
+                  nombre: client.nombre || '',
+                  email: client.email || '',
+                  telefono: client.telefono || '',
+                  direccion: client.direccion || '',
+                  nif_cif: client.nif_cif || ''
+                });
+              }
+              
               clientSelect.appendChild(option);
             });
           } catch (error) {
@@ -524,6 +727,14 @@
             this.previewInvoice();
           });
 
+          document.getElementById('printBtn').addEventListener('click', async () => {
+            await this.printInvoice();
+          });
+
+          document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+            await this.exportToPDF();
+          });
+
           document.getElementById('saveInvoiceBtn').addEventListener('click', () => {
             this.saveInvoice('enviada');
           });
@@ -533,6 +744,33 @@
             e.preventDefault();
             await this.createQuickClient(e.target);
           });
+
+          // Template selector
+          document.getElementById('templateSelect').addEventListener('change', (e) => {
+            this.selectedTemplate = e.target.value;
+            this.updateTemplatePreview();
+            
+            // Show/hide custom template section
+            const customSection = document.getElementById('customTemplateSection');
+            if (e.target.value === 'factura-personalizada') {
+              customSection.classList.remove('hidden');
+            } else {
+              customSection.classList.add('hidden');
+            }
+          });
+
+          document.getElementById('previewTemplateBtn').addEventListener('click', () => {
+            this.showTemplatePreview();
+          });
+
+          // Upload template button
+          document.getElementById('uploadTemplateBtn').addEventListener('click', () => {
+            const customSection = document.getElementById('customTemplateSection');
+            customSection.classList.toggle('hidden');
+          });
+
+          // Custom template functionality
+          this.setupCustomTemplateHandlers();
         }
 
         showClientInfo(selectElement) {
@@ -540,19 +778,24 @@
           const clientInfo = document.getElementById('clientInfo');
           const clientDetails = document.getElementById('clientDetails');
 
-          if (selectedOption && selectedOption.dataset.clientData) {
-            const client = JSON.parse(selectedOption.dataset.clientData);
-            
-            clientDetails.innerHTML = `
-              <div class="grid grid-cols-1 gap-1">
-                <div><strong>Email:</strong> ${client.email || 'No especificado'}</div>
-                <div><strong>Teléfono:</strong> ${client.telefono || 'No especificado'}</div>
-                <div><strong>Dirección:</strong> ${client.direccion || 'No especificada'}</div>
-                ${client.nif_cif ? `<div><strong>NIF/CIF:</strong> ${client.nif_cif}</div>` : ''}
-              </div>
-            `;
-            
-            clientInfo.classList.remove('hidden');
+          if (selectedOption && selectedOption.dataset.clientData && selectedOption.dataset.clientData !== 'undefined') {
+            try {
+              const client = JSON.parse(selectedOption.dataset.clientData);
+              
+              clientDetails.innerHTML = `
+                <div class="grid grid-cols-1 gap-1">
+                  <div><strong>Email:</strong> ${client.email || 'No especificado'}</div>
+                  <div><strong>Teléfono:</strong> ${client.telefono || 'No especificado'}</div>
+                  <div><strong>Dirección:</strong> ${client.direccion || 'No especificada'}</div>
+                  ${client.nif_cif ? `<div><strong>NIF/CIF:</strong> ${client.nif_cif}</div>` : ''}
+                </div>
+              `;
+              
+              clientInfo.classList.remove('hidden');
+            } catch (error) {
+              console.error('Error al parsear datos del cliente:', error);
+              clientInfo.classList.add('hidden');
+            }
           } else {
             clientInfo.classList.add('hidden');
           }
@@ -675,30 +918,101 @@
           let subtotal = 0;
           let totalIva = 0;
 
-          document.querySelectorAll('.invoice-line').forEach(row => {
-            const cantidad = parseFloat(row.querySelector('.line-cantidad').value) || 0;
-            const precio = parseFloat(row.querySelector('.line-precio').value) || 0;
-            const ivaPercent = parseFloat(row.querySelector('.line-iva').value) || 0;
-            
-            const lineSubtotal = cantidad * precio;
-            const lineIva = lineSubtotal * (ivaPercent / 100);
-            
-            subtotal += lineSubtotal;
-            totalIva += lineIva;
+          console.log('🧮 Iniciando cálculo de totales...');
+
+          const invoiceLines = document.querySelectorAll('.invoice-line');
+          console.log(`📋 Encontradas ${invoiceLines.length} líneas de factura`);
+
+          invoiceLines.forEach((row, index) => {
+            // Buscar elementos con más robustez
+            const cantidadElement = row.querySelector('.line-cantidad') || row.querySelector('input[name*="cantidad"]');
+            const precioElement = row.querySelector('.line-precio') || row.querySelector('input[name*="precio"]');
+            const ivaElement = row.querySelector('.line-iva') || row.querySelector('select[name*="iva"]');
+
+            const cantidad = cantidadElement ? parseFloat(cantidadElement.value) || 0 : 0;
+            const precio = precioElement ? parseFloat(precioElement.value) || 0 : 0;
+            const ivaPercent = ivaElement ? parseFloat(ivaElement.value) || 21 : 21;
+
+            console.log(`Línea ${index + 1}:`, {
+              cantidad: cantidad,
+              precio: precio,
+              iva: ivaPercent,
+              cantidadElement: !!cantidadElement,
+              precioElement: !!precioElement,
+              ivaElement: !!ivaElement
+            });
+
+            if (cantidad > 0 && precio > 0) {
+              const lineSubtotal = cantidad * precio;
+              const lineIva = lineSubtotal * (ivaPercent / 100);
+
+              subtotal += lineSubtotal;
+              totalIva += lineIva;
+
+              console.log(`  Subtotal línea: ${lineSubtotal}, IVA línea: ${lineIva}`);
+
+              // Actualizar el subtotal de la línea
+              const subtotalCell = row.querySelector('.line-subtotal');
+              if (subtotalCell) {
+                subtotalCell.textContent = `€${lineSubtotal.toFixed(2)}`;
+              }
+            } else {
+              console.log(`  Línea ${index + 1} omitida (cantidad: ${cantidad}, precio: ${precio})`);
+            }
           });
 
-          const descuento = parseFloat(document.getElementById('discountInput').value) || 0;
-          const total = subtotal + totalIva - descuento;
+          const descuentoElement = document.getElementById('discountInput');
+          const descuento = descuentoElement ? parseFloat(descuentoElement.value) || 0 : 0;
+          const baseImponible = subtotal - descuento;
+          const total = baseImponible + totalIva;
 
-          // Update display
-          document.getElementById('subtotalAmount').textContent = `€${subtotal.toFixed(2)}`;
-          document.getElementById('vatAmount').textContent = `€${totalIva.toFixed(2)}`;
-          document.getElementById('totalAmount').textContent = `€${total.toFixed(2)}`;
+          console.log('📊 Totales calculados:', {
+            subtotalBruto: subtotal.toFixed(2),
+            descuento: descuento.toFixed(2),
+            baseImponible: baseImponible.toFixed(2),
+            totalIva: totalIva.toFixed(2),
+            total: total.toFixed(2)
+          });
+
+          // Update display elements
+          const subtotalAmountElement = document.getElementById('subtotalAmount');
+          const vatAmountElement = document.getElementById('vatAmount');
+          const totalAmountElement = document.getElementById('totalAmount');
+
+          if (subtotalAmountElement) {
+            subtotalAmountElement.textContent = `€${baseImponible.toFixed(2)}`;
+          } else {
+            console.error('❌ Elemento subtotalAmount no encontrado');
+          }
+
+          if (vatAmountElement) {
+            vatAmountElement.textContent = `€${totalIva.toFixed(2)}`;
+          } else {
+            console.error('❌ Elemento vatAmount no encontrado');
+          }
+
+          if (totalAmountElement) {
+            totalAmountElement.textContent = `€${total.toFixed(2)}`;
+          } else {
+            console.error('❌ Elemento totalAmount no encontrado');
+          }
 
           // Update hidden fields
-          document.getElementById('subtotalHidden').value = subtotal.toFixed(2);
-          document.getElementById('vatHidden').value = totalIva.toFixed(2);
-          document.getElementById('totalHidden').value = total.toFixed(2);
+          const subtotalHiddenElement = document.getElementById('subtotalHidden');
+          const vatHiddenElement = document.getElementById('vatHidden');
+          const totalHiddenElement = document.getElementById('totalHidden');
+
+          if (subtotalHiddenElement) {
+            subtotalHiddenElement.value = baseImponible.toFixed(2);
+          }
+          if (vatHiddenElement) {
+            vatHiddenElement.value = totalIva.toFixed(2);
+          }
+          if (totalHiddenElement) {
+            totalHiddenElement.value = total.toFixed(2);
+          }
+
+          console.log('✅ Cálculos completados y elementos actualizados');
         }
 
         async createQuickClient(form) {
@@ -827,6 +1141,25 @@
           return lines;
         }
 
+        getFormData() {
+          const form = document.getElementById('invoiceForm');
+          const formData = new FormData(form);
+          const data = {};
+          
+          for (let [key, value] of formData.entries()) {
+            data[key] = value;
+          }
+          
+          // Get client ID
+          data.cliente_id = document.getElementById('clientSelect').value;
+          
+          // Asegurar que el número de factura esté disponible
+          const invoiceNumber = document.getElementById('invoiceNumber').value;
+          data.numero_factura = invoiceNumber || data.numero;
+          
+          return data;
+        }
+
         async previewInvoice() {
           try {
             const formData = this.getFormData();
@@ -840,13 +1173,24 @@
               throw new Error('Debe agregar al menos un concepto a la factura');
             }
 
-            // Generate preview HTML
-            const previewHtml = await this.generateInvoicePreview(formData, lines);
-            
-            // Open preview in new window
-            const previewWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
-            previewWindow.document.write(previewHtml);
-            previewWindow.document.close();
+            // Primero guardar la factura como borrador si no existe
+            if (!this.currentInvoiceId) {
+              const result = await this.saveInvoice('borrador', false); // Guardar sin mostrar notificación
+              if (!result.success) {
+                throw new Error('Error al guardar factura: ' + result.message);
+              }
+              this.currentInvoiceId = result.invoiceId;
+            }
+
+            // Usar el nuevo sistema de vista previa con la plantilla seleccionada
+            if (window.invoicePreview) {
+              // Pasar la plantilla seleccionada al preview manager
+              window.invoicePreview.selectedTemplate = this.getSelectedTemplateFile();
+              await window.invoicePreview.showInvoicePreview(this.currentInvoiceId);
+            } else {
+              // Fallback al método anterior
+              await this.showPreviewFallback(formData, lines);
+            }
             
           } catch (error) {
             console.error('Error al generar vista previa:', error);
@@ -854,11 +1198,51 @@
           }
         }
 
+        async showPreviewFallback(formData, lines) {
+          // Generate preview HTML (método anterior como respaldo)
+          const previewHtml = await this.generateInvoicePreview(formData, lines);
+          
+          // Open preview in new window
+          const previewWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
+          previewWindow.document.write(previewHtml);
+          previewWindow.document.close();
+        }
+
         async generateInvoicePreview(formData, lines) {
           // Get client data
           const clientSelect = document.getElementById('clientSelect');
           const selectedOption = clientSelect.selectedOptions[0];
-          const clientData = selectedOption ? JSON.parse(selectedOption.dataset.clientData) : null;
+          let clientData = null;
+
+          // Verificar que existan los datos del cliente antes de parsear
+          if (selectedOption && selectedOption.dataset.clientData && selectedOption.dataset.clientData !== 'undefined') {
+            try {
+              clientData = JSON.parse(selectedOption.dataset.clientData);
+            } catch (error) {
+              console.error('Error al parsear datos del cliente:', error);
+              clientData = null;
+            }
+          }
+
+          // Si no hay datos del cliente, intentar obtenerlos por ID
+          if (!clientData && selectedOption && selectedOption.value) {
+            try {
+              clientData = await ipcRenderer.invoke('db-get-client-by-id', parseInt(selectedOption.value));
+            } catch (error) {
+              console.error('Error al obtener cliente por ID:', error);
+            }
+          }
+
+          // Datos por defecto si no se encuentra el cliente
+          if (!clientData) {
+            clientData = {
+              nombre: selectedOption ? selectedOption.textContent : 'Cliente no encontrado',
+              email: '',
+              telefono: '',
+              direccion: '',
+              nif_cif: ''
+            };
+          }
 
           const subtotal = parseFloat(formData.subtotal);
           const totalIva = parseFloat(formData.total_iva);
@@ -968,6 +1352,337 @@
             </body>
             </html>
           `;
+        }
+
+        async printInvoice() {
+          try {
+            const formData = this.getFormData();
+            
+            if (!formData.cliente_id) {
+              throw new Error('Debe seleccionar un cliente');
+            }
+
+            const lines = this.getInvoiceLines();
+            if (lines.length === 0) {
+              throw new Error('Debe agregar al menos un concepto a la factura');
+            }
+
+            // Primero guardar la factura como borrador si no existe
+            if (!this.currentInvoiceId) {
+              const result = await this.saveInvoice('borrador', false);
+              if (!result.success) {
+                throw new Error('Error al guardar factura: ' + result.message);
+              }
+              this.currentInvoiceId = result.invoiceId;
+            }
+
+            // Usar el sistema de impresión
+            if (window.invoicePreview) {
+              await window.invoicePreview.printInvoice(this.currentInvoiceId);
+            } else {
+              throw new Error('Sistema de impresión no disponible');
+            }
+            
+          } catch (error) {
+            console.error('Error al imprimir factura:', error);
+            window.app.showNotification('Error al imprimir factura: ' + error.message, 'error');
+          }
+        }
+
+        async exportToPDF() {
+          try {
+            const formData = this.getFormData();
+            
+            if (!formData.cliente_id) {
+              throw new Error('Debe seleccionar un cliente');
+            }
+
+            const lines = this.getInvoiceLines();
+            if (lines.length === 0) {
+              throw new Error('Debe agregar al menos un concepto a la factura');
+            }
+
+            // Primero guardar la factura como borrador si no existe
+            if (!this.currentInvoiceId) {
+              const result = await this.saveInvoice('borrador', false);
+              if (!result.success) {
+                throw new Error('Error al guardar factura: ' + result.message);
+              }
+              this.currentInvoiceId = result.invoiceId;
+            }
+
+            // Usar el sistema de exportación PDF
+            if (window.invoicePreview) {
+              await window.invoicePreview.downloadPDF(this.currentInvoiceId);
+            } else {
+              throw new Error('Sistema de exportación PDF no disponible');
+            }
+            
+          } catch (error) {
+            console.error('Error al exportar PDF:', error);
+            window.app.showNotification('Error al exportar PDF: ' + error.message, 'error');
+          }
+        }
+
+        // Métodos para gestión de plantillas
+        updateTemplatePreview() {
+          const templates = this.getTemplateInfo();
+          const selectedTemplate = templates[this.selectedTemplate];
+          
+          if (selectedTemplate) {
+            document.getElementById('templateName').textContent = selectedTemplate.name;
+            document.getElementById('templateDescription').textContent = selectedTemplate.description;
+            
+            const preview = document.getElementById('templatePreview');
+            preview.classList.remove('hidden');
+          }
+        }
+
+        showTemplatePreview() {
+          // Toggle preview visibility
+          const preview = document.getElementById('templatePreview');
+          if (preview.classList.contains('hidden')) {
+            this.updateTemplatePreview();
+          } else {
+            preview.classList.add('hidden');
+          }
+        }
+
+        getTemplateInfo() {
+          return {
+            'factura-profesional': {
+              name: 'Plantilla Profesional',
+              description: 'Diseño elegante con cabecera empresarial, tablas organizadas y pie de página profesional. Ideal para empresas y profesionales.',
+              file: 'factura-profesional.html'
+            },
+            'factura-template': {
+              name: 'Plantilla Clásica',
+              description: 'Diseño tradicional y limpio, perfecto para uso general. Incluye todos los elementos esenciales de una factura.',
+              file: 'factura-template.html'
+            },
+            'factura-minimalista': {
+              name: 'Plantilla Minimalista',
+              description: 'Diseño simple y limpio con elementos esenciales. Ideal para freelancers y pequeños negocios.',
+              file: 'factura-profesional.html' // Por ahora usa la misma
+            },
+            'factura-moderna': {
+              name: 'Plantilla Moderna',
+              description: 'Diseño contemporáneo con elementos visuales atractivos. Perfecta para empresas creativas y startups.',
+              file: 'factura-profesional.html' // Por ahora usa la misma
+            }
+          };
+        }
+
+        getSelectedTemplateFile() {
+          const templates = this.getTemplateInfo();
+          return templates[this.selectedTemplate]?.file || 'factura-profesional.html';
+        }
+
+        setupCustomTemplateHandlers() {
+          const dropZone = document.getElementById('templateImageDropZone');
+          const fileInput = document.getElementById('templateImageInput');
+          const previewContainer = document.getElementById('uploadedImagePreview');
+          const previewImage = document.getElementById('previewImage');
+          const imageName = document.getElementById('imageName');
+          const removeBtn = document.getElementById('removeImageBtn');
+          const generateBtn = document.getElementById('generateCustomTemplateBtn');
+
+          // Drag and drop handlers
+          dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-purple-500', 'bg-purple-100');
+          });
+
+          dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-purple-500', 'bg-purple-100');
+          });
+
+          dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-purple-500', 'bg-purple-100');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+              this.handleFileSelection(files[0]);
+            }
+          });
+
+          // Click to select file
+          dropZone.addEventListener('click', () => {
+            fileInput.click();
+          });
+
+          fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+              this.handleFileSelection(e.target.files[0]);
+            }
+          });
+
+          // Remove image
+          removeBtn.addEventListener('click', () => {
+            this.clearUploadedImage();
+          });
+
+          // Generate custom template
+          generateBtn.addEventListener('click', () => {
+            this.generateCustomTemplate();
+          });
+        }
+
+        handleFileSelection(file) {
+          // Validate file type
+          const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+          if (!validTypes.includes(file.type)) {
+            if (window.app) {
+              window.app.showNotification('Tipo de archivo no válido. Use JPG, PNG o PDF.', 'error');
+            }
+            return;
+          }
+
+          // Validate file size (10MB max)
+          const maxSize = 10 * 1024 * 1024; // 10MB
+          if (file.size > maxSize) {
+            if (window.app) {
+              window.app.showNotification('El archivo es demasiado grande. Máximo 10MB.', 'error');
+            }
+            return;
+          }
+
+          // Store file reference
+          this.uploadedFile = file;
+
+          // Show preview
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const previewImage = document.getElementById('previewImage');
+            const imageName = document.getElementById('imageName');
+            const previewContainer = document.getElementById('uploadedImagePreview');
+
+            if (file.type === 'application/pdf') {
+              previewImage.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNCAySDZhMiAyIDAgMCAwLTIgMnYxNmEyIDIgMCAwIDAgMiAyaDEyYTIgMiAwIDAgMCAyLTJWOHoiPjwvcGF0aD48cG9seWxpbmUgcG9pbnRzPSIxNCwyIDE0LDggMjAsOCI+PC9wb2x5bGluZT48bGluZSB4MT0iMTYiIHkxPSIxMyIgeDI9IjgiIHkyPSIxMyI+PC9saW5lPjxsaW5lIHgxPSIxNiIgeTE9IjE3IiB4Mj0iOCIgeTI9IjE3Ij48L2xpbmU+PGxpbmUgeDE9IjEwIiB5MT0iOSIgeDI9IjkiIHkyPSI5Ij48L2xpbmU+PC9zdmc+';
+            } else {
+              previewImage.src = e.target.result;
+            }
+
+            imageName.textContent = file.name;
+            previewContainer.classList.remove('hidden');
+
+            // Enable generate button
+            document.getElementById('generateCustomTemplateBtn').disabled = false;
+          };
+
+          reader.readAsDataURL(file);
+        }
+
+        clearUploadedImage() {
+          this.uploadedFile = null;
+          document.getElementById('uploadedImagePreview').classList.add('hidden');
+          document.getElementById('templateImageInput').value = '';
+          document.getElementById('generateCustomTemplateBtn').disabled = true;
+        }
+
+        async generateCustomTemplate() {
+          if (!this.uploadedFile) {
+            if (window.app) {
+              window.app.showNotification('Por favor, sube una imagen de referencia primero.', 'error');
+            }
+            return;
+          }
+
+          try {
+            // Show progress
+            const progressContainer = document.getElementById('templateGenerationProgress');
+            const progressBar = document.getElementById('progressBar');
+            const generateBtn = document.getElementById('generateCustomTemplateBtn');
+            
+            progressContainer.classList.remove('hidden');
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generando...';
+
+            // Simulate progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+              progress += Math.random() * 20;
+              if (progress > 90) progress = 90;
+              progressBar.style.width = `${progress}%`;
+            }, 200);
+
+            // Get configuration
+            const templateName = document.getElementById('customTemplateName').value || 'Mi Plantilla Personalizada';
+            const baseStyle = document.getElementById('customTemplateStyle').value;
+            const includeHeader = document.getElementById('includeHeader').checked;
+            const includeFooter = document.getElementById('includeFooter').checked;
+            const coloredHeaders = document.getElementById('coloredHeaders').checked;
+
+            // Prepare file data
+            const formData = new FormData();
+            formData.append('referenceImage', this.uploadedFile);
+            formData.append('templateName', templateName);
+            formData.append('baseStyle', baseStyle);
+            formData.append('includeHeader', includeHeader);
+            formData.append('includeFooter', includeFooter);
+            formData.append('coloredHeaders', coloredHeaders);
+
+            // Send to backend for processing
+            const result = await ipcRenderer.invoke('generate-custom-template', {
+              fileName: this.uploadedFile.name,
+              fileType: this.uploadedFile.type,
+              fileSize: this.uploadedFile.size,
+              templateName: templateName,
+              baseStyle: baseStyle,
+              options: {
+                includeHeader,
+                includeFooter,
+                coloredHeaders
+              }
+            });
+
+            clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+
+            setTimeout(() => {
+              progressContainer.classList.add('hidden');
+              generateBtn.disabled = false;
+              generateBtn.innerHTML = '<i class="fas fa-magic mr-2"></i>Generar Plantilla';
+
+              if (result.success) {
+                // Add new template to select
+                const templateSelect = document.getElementById('templateSelect');
+                const option = document.createElement('option');
+                option.value = result.templateId;
+                option.textContent = `🎯 ${templateName}`;
+                templateSelect.appendChild(option);
+                
+                // Select the new template
+                templateSelect.value = result.templateId;
+                this.selectedTemplate = result.templateId;
+
+                // Hide custom section
+                document.getElementById('customTemplateSection').classList.add('hidden');
+                this.clearUploadedImage();
+
+                if (window.app) {
+                  window.app.showNotification('Plantilla personalizada creada exitosamente', 'success');
+                }
+              } else {
+                throw new Error(result.message || 'Error al generar la plantilla');
+              }
+            }, 1000);
+
+          } catch (error) {
+            console.error('Error al generar plantilla personalizada:', error);
+            
+            // Hide progress and restore button
+            document.getElementById('templateGenerationProgress').classList.add('hidden');
+            const generateBtn = document.getElementById('generateCustomTemplateBtn');
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<i class="fas fa-magic mr-2"></i>Generar Plantilla';
+
+            if (window.app) {
+              window.app.showNotification('Error al generar plantilla: ' + error.message, 'error');
+            }
+          }
         }
       }
 

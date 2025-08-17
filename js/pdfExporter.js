@@ -1,12 +1,28 @@
 // PDF Exporter para la aplicación Facturador
-const { ipcRenderer } = require('electron');
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
+// Verificar si FacturaTemplateManager ya está disponible globalmente
+let FacturaTemplateManager;
+if (typeof window !== 'undefined' && window.FacturaTemplateManager) {
+    FacturaTemplateManager = window.FacturaTemplateManager;
+} else {
+    try {
+        FacturaTemplateManager = require('./facturaTemplateManager');
+    } catch (error) {
+        console.warn('FacturaTemplateManager no disponible:', error.message);
+    }
+}
+
 class PDFExporter {
     constructor() {
         this.outputDir = path.join(require('os').homedir(), 'Facturador', 'exports');
+        if (FacturaTemplateManager) {
+            this.templateManager = new FacturaTemplateManager();
+        }
+        // Use global ipcRenderer from app.js
+        this.ipcRenderer = window.ipcRenderer;
         this.init();
     }
 
@@ -33,7 +49,7 @@ class PDFExporter {
             const invoiceLines = await ipcRenderer.invoke('db-get-invoice-lines', invoiceId);
             
             // Generar HTML para la factura
-            const htmlContent = this.generateInvoiceHTML(invoice, invoiceLines);
+            const htmlContent = await this.generateInvoiceHTML(invoice, invoiceLines);
             
             // Crear PDF usando Puppeteer
             const browser = await puppeteer.launch({ 
@@ -79,248 +95,131 @@ class PDFExporter {
         }
     }
 
-    generateInvoiceHTML(invoice, invoiceLines) {
-        const fechaEmision = new Date(invoice.fecha_emision).toLocaleDateString('es-ES');
-        const fechaVencimiento = new Date(invoice.fecha_vencimiento).toLocaleDateString('es-ES');
+    /**
+     * Genera HTML de factura usando el template manager
+     * @param {Object} invoice - Datos de la factura
+     * @param {Array} invoiceLines - Líneas de la factura
+     * @param {String} templateName - Nombre de la plantilla
+     * @returns {String} HTML generado
+     */
+    async generateInvoiceHTML(invoice, invoiceLines, templateName = 'factura-profesional.html') {
+        try {
+            // Obtener datos del cliente
+            const cliente = await this.ipcRenderer.invoke('db-get-client-by-id', invoice.cliente_id);
+            
+            // Obtener configuración de la empresa
+            let configuracion = await this.ipcRenderer.invoke('db-get-settings') || {};
+            
+            // Configuración por defecto para el emisor
+            const empresaConfig = {
+                nombre: configuracion.empresa_nombre || 'Loredana Andreea Popa',
+                direccion: configuracion.empresa_direccion || 'Calle Romero 24C',
+                nif: configuracion.empresa_nif || 'X6554416Z',
+                telefono: configuracion.empresa_telefono || '677 83 53 01',
+                email: configuracion.empresa_email || 'contacto@miempresa.com'
+            };
+            
+            // Preparar datos para la plantilla
+            const datosFactura = {
+                emisor: empresaConfig,
+                factura: {
+                    numero: invoice.numero || invoice.numero_factura,
+                    fecha: this.formatearFecha(invoice.fecha_emision),
+                    pagina: '1 de 1'
+                },
+                cliente: {
+                    nombre: cliente ? cliente.nombre : 'Cliente no encontrado',
+                    direccion: cliente ? cliente.direccion : '',
+                    nif: cliente ? (cliente.nif_cif || cliente.nif) : '',
+                    telefono: cliente ? cliente.telefono : '',
+                    email: cliente ? cliente.email : ''
+                },
+                productos: invoiceLines.map(line => ({
+                    descripcion: line.producto_nombre || line.descripcion || 'Producto sin nombre',
+                    cantidad: line.cantidad,
+                    precio: parseFloat(line.precio_unitario) || 0,
+                    importe: parseFloat(line.total) || 0
+                })),
+                totales: this.calcularTotales(invoiceLines, 21) // Use standard 21% IVA rate
+            };
+
+            // Generar HTML usando el template manager con la plantilla seleccionada
+            return await this.templateManager.generarFacturaHTML(datosFactura, templateName);
+            
+        } catch (error) {
+            console.error('Error al generar HTML de factura:', error);
+            // Fallback a template básico
+            return this.generateBasicInvoiceHTML(invoice, invoiceLines);
+        }
+    }
+
+    /**
+     * Genera vista previa HTML de la factura
+     * @param {Number} invoiceId - ID de la factura
+     * @returns {Object} Resultado con HTML generado
+     */
+    async previewInvoiceHTML(invoiceId) {
+        try {
+            // Obtener datos de la factura
+            const invoice = await this.ipcRenderer.invoke('db-get-invoice-by-id', invoiceId);
+            if (!invoice) {
+                throw new Error('Factura no encontrada');
+            }
+            const invoiceLines = await this.ipcRenderer.invoke('db-get-invoice-lines', invoiceId);
+
+            // Generar HTML
+            const htmlContent = await this.generateInvoiceHTML(invoice, invoiceLines);
+            
+            return {
+                success: true,
+                html: htmlContent,
+                invoiceNumber: invoice.numero || invoice.numero_factura
+            };
+            
+        } catch (error) {
+            console.error('Error al generar vista previa:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    /**
+     * Calcula los totales de la factura
+     * @param {Array} invoiceLines - Líneas de la factura
+     * @param {Number} ivaPercentage - Porcentaje de IVA
+     * @returns {Object} Totales calculados
+     */
+    calcularTotales(invoiceLines, ivaPercentage = 21) {
+        let subtotal = 0;
         
-        return `
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Factura ${invoice.numero_factura}</title>
-            <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { 
-                    font-family: 'Arial', sans-serif; 
-                    line-height: 1.6; 
-                    color: #333;
-                    background: white;
-                }
-                .invoice-container { 
-                    max-width: 800px; 
-                    margin: 0 auto; 
-                    padding: 30px;
-                    background: white;
-                }
-                .header { 
-                    display: flex; 
-                    justify-content: space-between; 
-                    align-items: center; 
-                    margin-bottom: 40px;
-                    border-bottom: 3px solid #2563eb;
-                    padding-bottom: 20px;
-                }
-                .company-info h1 { 
-                    color: #2563eb; 
-                    font-size: 28px; 
-                    margin-bottom: 5px;
-                }
-                .company-info p { 
-                    color: #666; 
-                    font-size: 14px;
-                }
-                .invoice-info { 
-                    text-align: right;
-                }
-                .invoice-info h2 { 
-                    color: #2563eb; 
-                    font-size: 24px; 
-                    margin-bottom: 10px;
-                }
-                .invoice-info p { 
-                    margin: 5px 0; 
-                    font-size: 14px;
-                }
-                .billing-info { 
-                    display: flex; 
-                    justify-content: space-between; 
-                    margin: 40px 0;
-                }
-                .billing-info div { 
-                    width: 48%;
-                }
-                .billing-info h3 { 
-                    color: #2563eb; 
-                    border-bottom: 2px solid #e5e7eb; 
-                    padding-bottom: 10px; 
-                    margin-bottom: 15px;
-                }
-                .billing-info p { 
-                    margin: 5px 0; 
-                    font-size: 14px;
-                }
-                .invoice-items { 
-                    margin: 40px 0;
-                }
-                .items-table { 
-                    width: 100%; 
-                    border-collapse: collapse; 
-                    margin-top: 20px;
-                }
-                .items-table th { 
-                    background: #f8fafc; 
-                    color: #374151; 
-                    padding: 12px; 
-                    text-align: left; 
-                    border-bottom: 2px solid #e5e7eb;
-                    font-weight: 600;
-                }
-                .items-table td { 
-                    padding: 12px; 
-                    border-bottom: 1px solid #e5e7eb;
-                }
-                .items-table tr:nth-child(even) { 
-                    background: #f9fafb;
-                }
-                .text-right { text-align: right; }
-                .text-center { text-align: center; }
-                .totals { 
-                    margin-top: 30px;
-                    border-top: 2px solid #e5e7eb;
-                    padding-top: 20px;
-                }
-                .totals table { 
-                    width: 300px; 
-                    margin-left: auto;
-                    border-collapse: collapse;
-                }
-                .totals td { 
-                    padding: 8px 12px; 
-                    border-bottom: 1px solid #e5e7eb;
-                }
-                .totals .total-row { 
-                    font-weight: bold; 
-                    font-size: 18px; 
-                    color: #2563eb;
-                    border-top: 2px solid #2563eb;
-                }
-                .notes { 
-                    margin-top: 40px; 
-                    padding: 20px; 
-                    background: #f8fafc; 
-                    border-left: 4px solid #2563eb;
-                }
-                .notes h4 { 
-                    color: #2563eb; 
-                    margin-bottom: 10px;
-                }
-                .footer { 
-                    margin-top: 50px; 
-                    text-align: center; 
-                    color: #666; 
-                    font-size: 12px;
-                    border-top: 1px solid #e5e7eb;
-                    padding-top: 20px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="invoice-container">
-                <!-- Header -->
-                <div class="header">
-                    <div class="company-info">
-                        <h1>Facturador Pro</h1>
-                        <p>Sistema de Facturación</p>
-                        <p>Email: info@facturador.com</p>
-                        <p>Teléfono: +1 234 567 8900</p>
-                    </div>
-                    <div class="invoice-info">
-                        <h2>FACTURA</h2>
-                        <p><strong>Número:</strong> ${invoice.numero_factura}</p>
-                        <p><strong>Fecha de Emisión:</strong> ${fechaEmision}</p>
-                        <p><strong>Fecha de Vencimiento:</strong> ${fechaVencimiento}</p>
-                        <p><strong>Estado:</strong> ${this.getStatusText(invoice.estado)}</p>
-                    </div>
-                </div>
+        invoiceLines.forEach(line => {
+            subtotal += parseFloat(line.total) || 0;
+        });
+        
+        // Ensure IVA percentage is reasonable (between 0 and 100)
+        if (ivaPercentage > 100 || ivaPercentage < 0) {
+            console.warn(`Invalid IVA percentage: ${ivaPercentage}%, using 21% as default`);
+            ivaPercentage = 21;
+        }
+        
+        const iva = subtotal * (ivaPercentage / 100);
+        const total = subtotal + iva;
+        
+        return {
+            baseImponible: subtotal.toFixed(2),
+            porcentajeIva: ivaPercentage,
+            importeIva: iva.toFixed(2),
+            total: total.toFixed(2)
+        };
+    }
 
-                <!-- Información de Facturación -->
-                <div class="billing-info">
-                    <div>
-                        <h3>Facturar a:</h3>
-                        <p><strong>${invoice.cliente_nombre || 'Cliente no encontrado'}</strong></p>
-                        <p>${invoice.cliente_email || ''}</p>
-                        <p>${invoice.cliente_telefono || ''}</p>
-                        <p>${invoice.cliente_direccion || ''}</p>
-                    </div>
-                    <div>
-                        <h3>Detalles de Pago:</h3>
-                        <p><strong>Método de Pago:</strong> ${invoice.metodo_pago || 'No especificado'}</p>
-                        <p><strong>Términos:</strong> ${invoice.terminos || 'Pago a 30 días'}</p>
-                        <p><strong>Moneda:</strong> ${invoice.moneda || 'EUR'}</p>
-                    </div>
-                </div>
-
-                <!-- Items de la Factura -->
-                <div class="invoice-items">
-                    <h3 style="color: #2563eb; margin-bottom: 20px;">Detalles de la Factura</h3>
-                    <table class="items-table">
-                        <thead>
-                            <tr>
-                                <th>Descripción</th>
-                                <th class="text-center">Cantidad</th>
-                                <th class="text-right">Precio Unitario</th>
-                                <th class="text-right">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${invoiceLines.map(line => `
-                                <tr>
-                                    <td>
-                                        <strong>${line.producto_nombre || line.descripcion}</strong>
-                                        ${line.descripcion && line.producto_nombre !== line.descripcion ? `<br><small style="color: #666;">${line.descripcion}</small>` : ''}
-                                    </td>
-                                    <td class="text-center">${line.cantidad}</td>
-                                    <td class="text-right">${this.formatCurrency(line.precio_unitario)}</td>
-                                    <td class="text-right">${this.formatCurrency(line.total)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Totales -->
-                <div class="totals">
-                    <table>
-                        <tr>
-                            <td>Subtotal:</td>
-                            <td class="text-right">${this.formatCurrency(invoice.subtotal || 0)}</td>
-                        </tr>
-                        <tr>
-                            <td>IVA (${invoice.tasa_iva || 21}%):</td>
-                            <td class="text-right">${this.formatCurrency(invoice.iva || 0)}</td>
-                        </tr>
-                        ${invoice.descuento > 0 ? `
-                        <tr>
-                            <td>Descuento:</td>
-                            <td class="text-right">-${this.formatCurrency(invoice.descuento)}</td>
-                        </tr>
-                        ` : ''}
-                        <tr class="total-row">
-                            <td>TOTAL:</td>
-                            <td class="text-right">${this.formatCurrency(invoice.total)}</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <!-- Notas -->
-                ${invoice.notas ? `
-                <div class="notes">
-                    <h4>Notas:</h4>
-                    <p>${invoice.notas}</p>
-                </div>
-                ` : ''}
-
-                <!-- Footer -->
-                <div class="footer">
-                    <p>Gracias por su preferencia</p>
-                    <p>Esta factura fue generada automáticamente por el sistema Facturador Pro</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        `;
+    formatearFecha(fecha) {
+        if (!fecha) return new Date().toLocaleDateString('es-ES');
+        
+        const fechaObj = new Date(fecha);
+        return fechaObj.toLocaleDateString('es-ES');
     }
 
     getStatusText(status) {

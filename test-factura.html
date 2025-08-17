@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura - F2024-001</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            background: white;
+        }
+
+        .factura-container {
+            width: 100%;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+
+        /* Título principal */
+        .factura-titulo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #34495e;
+            padding-bottom: 10px;
+        }
+
+        /* Información del emisor */
+        .emisor-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 25px;
+        }
+
+        .emisor-info h3 {
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .emisor-info p {
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        /* Tabla de información de factura */
+        .info-factura {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            background-color: #ecf0f1;
+        }
+
+        .info-factura th,
+        .info-factura td {
+            border: 1px solid #bdc3c7;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .info-factura th {
+            background-color: #34495e;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .info-factura td {
+            background-color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Tabla de productos/servicios */
+        .tabla-productos {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        .tabla-productos th {
+            background-color: #34495e;
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+            border: 1px solid #2c3e50;
+        }
+
+        .tabla-productos td {
+            padding: 12px 10px;
+            border: 1px solid #bdc3c7;
+            background-color: #ffffff;
+            font-size: 12px;
+        }
+
+        .tabla-productos tr:nth-child(even) td {
+            background-color: #f8f9fa;
+        }
+
+        .tabla-productos .descripcion {
+            width: 40%;
+            text-align: left;
+        }
+
+        .tabla-productos .unidad,
+        .tabla-productos .precio,
+        .tabla-productos .importe {
+            width: 20%;
+            text-align: right;
+        }
+
+        /* Sección de totales */
+        .totales-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .totales {
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .totales th,
+        .totales td {
+            padding: 10px 15px;
+            border: 1px solid #bdc3c7;
+            font-size: 14px;
+        }
+
+        .totales th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-weight: bold;
+            text-align: left;
+            width: 60%;
+        }
+
+        .totales td {
+            background-color: #ffffff;
+            text-align: right;
+            font-weight: 500;
+            width: 40%;
+        }
+
+        .totales .total-final th,
+        .totales .total-final td {
+            background-color: #34495e;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Pie de página */
+        .pie-pagina {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .pie-pagina p {
+            font-size: 13px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .factura-container {
+                margin: 0;
+                padding: 15px;
+            }
+
+            .factura-titulo {
+                font-size: 24px;
+            }
+
+            .info-factura th,
+            .info-factura td,
+            .tabla-productos th,
+            .tabla-productos td {
+                font-size: 11px;
+                padding: 8px;
+            }
+
+            .totales th,
+            .totales td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .pie-pagina p {
+                font-size: 11px;
+            }
+        }
+
+        /* Espaciado adicional */
+        .espaciado {
+            margin-bottom: 20px;
+        }
+
+        /* Texto centrado */
+        .texto-centrado {
+            text-align: center;
+        }
+
+        /* Texto en negrita */
+        .negrita {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="factura-container">
+        <!-- Título principal -->
+        <h1 class="factura-titulo">FACTURA</h1>
+
+        <!-- Información del emisor -->
+        <div class="emisor-info">
+            <h3>MI EMPRESA S.L.</h3>
+            <p><strong>Dirección:</strong> Calle Principal, 123 - 28001 Madrid</p>
+            <p><strong>N.I.F.:</strong> B12345678</p>
+            <p><strong>Teléfono:</strong> +34 91 123 45 67</p>
+            <p><strong>Email:</strong> contacto@miempresa.com</p>
+        </div>
+
+        <!-- Tabla de información de la factura -->
+        <table class="info-factura">
+            <thead>
+                <tr>
+                    <th>FECHA</th>
+                    <th>FACTURA</th>
+                    <th>N.I.F.</th>
+                    <th>TELÉFONO</th>
+                    <th>EMAIL</th>
+                    <th>PÁG.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="texto-centrado">07/07/2025</td>
+                    <td class="texto-centrado">F2024-001</td>
+                    <td class="texto-centrado">A87654321</td>
+                    <td class="texto-centrado">+34 954 987 654</td>
+                    <td class="texto-centrado">cliente@test.com</td>
+                    <td class="texto-centrado">1 de 1</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Información del cliente -->
+        <div class="emisor-info">
+            <h3>FACTURAR A:</h3>
+            <p><strong>Cliente de Prueba S.A.</strong></p>
+            <p>Avenida Test, 456 - 41001 Sevilla</p>
+        </div>
+
+        <!-- Tabla de productos/servicios -->
+        <table class="tabla-productos">
+            <thead>
+                <tr>
+                    <th class="descripcion">DESCRIPCIÓN</th>
+                    <th class="unidad">UNIDAD</th>
+                    <th class="precio">PRECIO</th>
+                    <th class="importe">IMPORTE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los productos se insertarán dinámicamente aquí -->
+                <!-- Las siguientes filas son placeholders que se reemplazarán con datos reales -->
+                <tr>
+                    <td class="descripcion">Servicio de consultoría</td>
+                    <td class="unidad texto-centrado">10</td>
+                    <td class="precio">50,00 €</td>
+                    <td class="importe">500,00 €</td>
+                </tr>
+                <tr>
+                    <td class="descripcion">Desarrollo de software</td>
+                    <td class="unidad texto-centrado">1</td>
+                    <td class="precio">1200,00 €</td>
+                    <td class="importe">1200,00 €</td>
+                </tr>
+                <tr>
+                    <td class="descripcion"></td>
+                    <td class="unidad texto-centrado"></td>
+                    <td class="precio"> €</td>
+                    <td class="importe"> €</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Sección de totales -->
+        <div class="totales-container">
+            <table class="totales">
+                <tr>
+                    <th>BASE IMPONIBLE:</th>
+                    <td>1700,00 €</td>
+                </tr>
+                <tr>
+                    <th>IVA (21%):</th>
+                    <td>357,00 €</td>
+                </tr>
+                <tr class="total-final">
+                    <th>TOTAL:</th>
+                    <td>2057,00 €</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Pie de página -->
+        <div class="pie-pagina">
+            <p><strong>Forma de pago:</strong> Transferencia a cuenta ES18 2100 4401 2513 0035 9149</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+    <title>Presupuestos - Facturador</title>
+    <link rel="icon" type="image/x-icon" href="../assets/icon.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!--
+      Tailwind CSS: For production, use a local build instead of the CDN.
+      1. Install Tailwind via npm in your project root:
+         npm install -D tailwindcss
+      2. Create your Tailwind config (if not present):
+         npx tailwindcss init
+      3. Create a CSS file (e.g., assets/tailwind.css) with:
+         @tailwind base;
+         @tailwind components;
+         @tailwind utilities;
+      4. Build your CSS for production:
+         npx tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.build.css --minify
+      5. Link the built CSS in your HTML:
+         <link href="../assets/tailwind.build.css" rel="stylesheet">
+      Remove the CDN/script above for production.
+    -->
+    <link href="../assets/tailwind.build.css" rel="stylesheet">
+</head>
+<body>
+    <div class="relative flex size-full min-h-screen flex-col bg-gray-50 group/design-root overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
+        <div class="layout-container flex h-full grow flex-col">
+            <!-- Header -->
+            <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#eaedf1] px-10 py-3">
+                <div class="flex items-center gap-4 text-[#101518]">
+                    <div class="size-4">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-[#101518] text-lg font-bold leading-tight tracking-[-0.015em]">Facturador</h2>
+                </div>
+                <div class="flex flex-1 justify-end gap-8">
+                    <div class="flex items-center gap-6">
+                        <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="clientes">Clientes</button>
+                        <button class="text-blue-600 text-sm font-bold leading-normal" data-navigate="presupuestos">Presupuestos</button>
+                        <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="appfacturas">Nueva Factura</button>
+                        <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="totalfacturas">Facturas</button>
+                        <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="productos">Artículos</button>
+                        <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="subir archivos">Archivos</button>
+                        <button class="text-[#101518] text-sm font-medium leading-normal hover:text-blue-600" data-navigate="ajustes">Ajustes</button>
+                    </div>
+                    <div id="userProfile" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-gray-300 flex items-center justify-center cursor-pointer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM74.08,197.5a64,64,0,0,1,107.84,0,87.83,87.83,0,0,1-107.84,0ZM96,120a32,32,0,1,1,32,32A32,32,0,0,1,96,120Zm97.76,66.41a79.66,79.66,0,0,0-36.06-28.75,48,48,0,1,0-59.4,0,79.66,79.66,0,0,0-36.06,28.75,88,88,0,1,1,131.52,0Z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <div class="flex h-full">
+                <!-- Sidebar -->
+                <nav class="w-64 bg-white border-r border-gray-200 p-4">
+                    <div class="space-y-2">
+                        <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="clientes">
+                            <div class="flex items-center gap-3">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"></path>
+                                </svg>
+                                Clientes
+                            </div>
+                        </button>
+                        <button class="w-full text-left px-4 py-2 text-sm font-medium bg-blue-100 text-blue-700 rounded-lg" data-navigate="presupuestos">
+                            <div class="flex items-center gap-3">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128ZM184,32H72A16,16,0,0,0,56,48V208a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V48A16,16,0,0,0,184,32Z"></path>
+                                </svg>
+                                Presupuestos
+                            </div>
+                        </button>
+                        <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="appfacturas">
+                            <div class="flex items-center gap-3">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path>
+                                </svg>
+                                Nueva Factura
+                            </div>
+                        </button>
+                        <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="totalfacturas">
+                            <div class="flex items-center gap-3">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Z"></path>
+                                </svg>
+                                Facturas
+                            </div>
+                        </button>
+                        <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="productos">
+                            <div class="flex items-center gap-3">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M80,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm136,56H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM44,52A12,12,0,1,0,56,64,12,12,0,0,0,44,52Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,116Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,180Z"></path>
+                                </svg>
+                                Artículos
+                            </div>
+                        </button>
+                        <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="subir archivos">
+                            <div class="flex items-center gap-3">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M224,152a8,8,0,0,1-8,8H192v16a8,8,0,0,1-16,0V160H152a8,8,0,0,1,0-16h24V128a8,8,0,0,1,16,0v16h24A8,8,0,0,1,224,152ZM48,180H76.69L132.69,124a12,12,0,0,1,17,0L176,150.34A8,8,0,1,0,187.31,139L161,112.69a28,28,0,0,0-39.6,0L84.69,150l-15-15A12,12,0,0,0,52.69,135L28,159.65A8,8,0,0,0,39.31,171l20-20,52,52A8,8,0,0,0,117,200H48a8,8,0,0,1,0-16ZM96,88a24,24,0,1,0-24-24A24,24,0,0,0,96,88Z"></path>
+                                </svg>
+                                Archivos
+                            </div>
+                        </button>
+                        <button class="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg" data-navigate="ajustes">
+                            <div class="flex items-center gap-3">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25a8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88a8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25a8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"></path>
+                                </svg>
+                                Ajustes
+                            </div>
+                        </button>
+                    </div>
+                </nav>
+
+                <!-- Content Area -->
+                <div class="flex-1 p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <!-- Header Section -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Gestión de Presupuestos</h1>
+                                <p class="text-gray-600">Crea, edita y gestiona presupuestos para tus clientes</p>
+                            </div>
+                            <button id="newQuoteBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path>
+                                </svg>
+                                Nuevo Presupuesto
+                            </button>
+                        </div>
+
+                        <!-- Filters and Search -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+                            <div class="flex flex-wrap gap-4 items-center">
+                                <div class="flex-1 min-w-64">
+                                    <input type="text" id="searchInput" placeholder="Buscar por cliente, número o descripción..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div class="flex gap-2">
+                                    <select id="statusFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">Todos los estados</option>
+                                        <option value="borrador">Borrador</option>
+                                        <option value="enviado">Enviado</option>
+                                        <option value="aceptado">Aceptado</option>
+                                        <option value="rechazado">Rechazado</option>
+                                        <option value="vencido">Vencido</option>
+                                    </select>
+                                    <select id="dateFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">Todas las fechas</option>
+                                        <option value="today">Hoy</option>
+                                        <option value="week">Esta semana</option>
+                                        <option value="month">Este mes</option>
+                                        <option value="quarter">Este trimestre</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Total Presupuestos</p>
+                                        <p class="text-2xl font-bold text-gray-900" id="totalQuotes">0</p>
+                                    </div>
+                                    <div class="bg-blue-100 p-3 rounded-full">
+                                        <svg width="24" height="24" fill="currentColor" class="text-blue-600" viewBox="0 0 256 256">
+                                            <path d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Pendientes</p>
+                                        <p class="text-2xl font-bold text-orange-600" id="pendingQuotes">0</p>
+                                    </div>
+                                    <div class="bg-orange-100 p-3 rounded-full">
+                                        <svg width="24" height="24" fill="currentColor" class="text-orange-600" viewBox="0 0 256 256">
+                                            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8H120a8,8,0,0,1-8-8V128a8,8,0,0,1,16,0v40h8A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Aceptados</p>
+                                        <p class="text-2xl font-bold text-green-600" id="acceptedQuotes">0</p>
+                                    </div>
+                                    <div class="bg-green-100 p-3 rounded-full">
+                                        <svg width="24" height="24" fill="currentColor" class="text-green-600" viewBox="0 0 256 256">
+                                            <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Valor Total</p>
+                                        <p class="text-2xl font-bold text-gray-900" id="totalValue">0 €</p>
+                                    </div>
+                                    <div class="bg-gray-100 p-3 rounded-full">
+                                        <svg width="24" height="24" fill="currentColor" class="text-gray-600" viewBox="0 0 256 256">
+                                            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.24,99.76a6,6,0,0,1,0,8.48l-32,32a6,6,0,0,1-8.48,0l-16-16a6,6,0,0,1,8.48-8.48L136,127.51l27.76-27.75A6,6,0,0,1,172.24,99.76Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quotes Table -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div class="px-6 py-4 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold text-gray-900">Listado de Presupuestos</h3>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Validez</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="quotesTableBody" class="bg-white divide-y divide-gray-200">
+                                        <!-- Quotes will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="emptyState" class="text-center py-12">
+                                <svg width="64" height="64" class="mx-auto text-gray-400 mb-4" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z"></path>
+                                </svg>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">No hay presupuestos</h3>
+                                <p class="text-gray-500 mb-4">Crea tu primer presupuesto para empezar a gestionar tus cotizaciones</p>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+                                    Crear Presupuesto
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Scripts -->
+    <script src="../js/app.js"></script>
+    <script>
+        class PresupuestosManager {
+            constructor() {
+                this.quotes = [];
+                this.filteredQuotes = [];
+                this.init();
+            }
+
+            init() {
+                this.loadQuotes();
+                this.setupEventListeners();
+                this.updateStats();
+            }
+
+            setupEventListeners() {
+                // New quote button
+                document.getElementById('newQuoteBtn').addEventListener('click', () => {
+                    this.createNewQuote();
+                });
+
+                // Search functionality
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.filterQuotes();
+                });
+
+                // Filter functionality
+                document.getElementById('statusFilter').addEventListener('change', () => {
+                    this.filterQuotes();
+                });
+
+                document.getElementById('dateFilter').addEventListener('change', () => {
+                    this.filterQuotes();
+                });
+
+                // Navigation
+                document.querySelectorAll('[data-navigate]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const page = e.target.closest('[data-navigate]').dataset.navigate;
+                        if (window.app) {
+                            window.app.navigateTo(page);
+                        }
+                    });
+                });
+            }
+
+            async loadQuotes() {
+                try {
+                    // This would load from database in a real implementation
+                    this.quotes = await this.loadQuotesFromStorage();
+                    this.filteredQuotes = [...this.quotes];
+                    this.renderQuotes();
+                    this.updateStats();
+                } catch (error) {
+                    console.error('Error loading quotes:', error);
+                    if (window.app) {
+                        window.app.showNotification('Error al cargar presupuestos', 'error');
+                    }
+                }
+            }
+
+            async loadQuotesFromStorage() {
+                // Mock data for now - in real implementation, this would use IPC to get from database
+                return [
+                    {
+                        id: 1,
+                        numero: 'PRE-2025-001',
+                        cliente: 'Empresa Demo S.L.',
+                        fecha: '2025-01-15',
+                        validez: '2025-02-15',
+                        estado: 'enviado',
+                        total: 1500.00,
+                        descripcion: 'Presupuesto para desarrollo web',
+                        productos: [
+                            { nombre: 'Desarrollo Web', descripcion: 'Creación de sitio web', cantidad: 1, precio: 1500.00 }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        numero: 'PRE-2025-002',
+                        cliente: 'Cliente ABC',
+                        fecha: '2025-01-20',
+                        validez: '2025-02-20',
+                        estado: 'aceptado',
+                        total: 2300.50,
+                        descripcion: 'Consultoría IT',
+                        productos: [
+                            { nombre: 'Consultoría Horas', descripcion: 'Horas de consultoría IT', cantidad: 10, precio: 230.05 }
+                        ]
+                    }
+                ];
+            }
+
+            filterQuotes() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const statusFilter = document.getElementById('statusFilter').value;
+                const dateFilter = document.getElementById('dateFilter').value;
+
+                this.filteredQuotes = this.quotes.filter(quote => {
+                    const matchesSearch = !searchTerm || 
+                        quote.numero.toLowerCase().includes(searchTerm) ||
+                        quote.cliente.toLowerCase().includes(searchTerm) ||
+                        quote.descripcion.toLowerCase().includes(searchTerm);
+
+                    const matchesStatus = !statusFilter || quote.estado === statusFilter;
+
+                    const matchesDate = !dateFilter || this.matchesDateFilter(quote.fecha, dateFilter);
+
+                    return matchesSearch && matchesStatus && matchesDate;
+                });
+
+                this.renderQuotes();
+                this.updateStats();
+            }
+
+            matchesDateFilter(dateString, filter) {
+                const date = new Date(dateString);
+                const now = new Date();
+                
+                switch(filter) {
+                    case 'today':
+                        return date.toDateString() === now.toDateString();
+                    case 'week':
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        return date >= weekAgo && date <= now;
+                    case 'month':
+                        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                    case 'quarter':
+                        const currentQuarter = Math.floor(now.getMonth() / 3);
+                        const dateQuarter = Math.floor(date.getMonth() / 3);
+                        return dateQuarter === currentQuarter && date.getFullYear() === now.getFullYear();
+                    default:
+                        return true;
+                }
+            }
+
+            renderQuotes() {
+                const tbody = document.getElementById('quotesTableBody');
+                const emptyState = document.getElementById('emptyState');
+
+                if (this.filteredQuotes.length === 0) {
+                    tbody.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+
+                tbody.innerHTML = this.filteredQuotes.map(quote => `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${quote.numero}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${quote.cliente}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${this.formatDate(quote.fecha)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${this.formatDate(quote.validez)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${this.getStatusColor(quote.estado)}">
+                                ${this.getStatusText(quote.estado)}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${quote.total.toFixed(2)} €</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <button class="text-blue-600 hover:text-blue-900" onclick="presupuestosManager.viewQuote(${quote.id})" title="Ver">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.48c.35.79,8.82,19.58,27.65,38.41C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.35c18.83-18.83,27.3-37.62,27.65-38.41A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path>
+                                    </svg>
+                                </button>
+                                <button class="text-gray-600 hover:text-gray-900" onclick="presupuestosManager.editQuote(${quote.id})" title="Editar">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M227.31,73.37,182.63,28.69a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM51.31,160,136,75.31,152.69,92,68,176.69ZM48,179.31,76.69,208H48Zm48,25.38L79.31,188,164,103.31,180.69,120Zm96-96L147.31,64l24-24L216,84.69Z"></path>
+                                    </svg>
+                                </button>
+                                <button class="text-red-600 hover:text-red-900" onclick="presupuestosManager.deleteQuote(${quote.id})" title="Eliminar">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            updateStats() {
+                const total = this.quotes.length;
+                const pending = this.quotes.filter(q => q.estado === 'enviado' || q.estado === 'borrador').length;
+                const accepted = this.quotes.filter(q => q.estado === 'aceptado').length;
+                const totalValue = this.quotes.reduce((sum, q) => sum + q.total, 0);
+
+                document.getElementById('totalQuotes').textContent = total;
+                document.getElementById('pendingQuotes').textContent = pending;
+                document.getElementById('acceptedQuotes').textContent = accepted;
+                document.getElementById('totalValue').textContent = totalValue.toFixed(2) + ' €';
+            }
+
+            getStatusColor(status) {
+                const colors = {
+                    'borrador': 'bg-gray-100 text-gray-800',
+                    'enviado': 'bg-blue-100 text-blue-800',
+                    'aceptado': 'bg-green-100 text-green-800',
+                    'rechazado': 'bg-red-100 text-red-800',
+                    'vencido': 'bg-orange-100 text-orange-800'
+                };
+                return colors[status] || 'bg-gray-100 text-gray-800';
+            }
+
+            getStatusText(status) {
+                const texts = {
+                    'borrador': 'Borrador',
+                    'enviado': 'Enviado',
+                    'aceptado': 'Aceptado',
+                    'rechazado': 'Rechazado',
+                    'vencido': 'Vencido'
+                };
+                return texts[status] || 'Desconocido';
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('es-ES');
+            }
+
+            createNewQuote() {
+                this.showQuoteForm();
+            }
+
+            showQuoteForm(quote = null) {
+                const isEdit = quote !== null;
+                // Productos iniciales
+                let productos = isEdit && quote.productos ? JSON.parse(JSON.stringify(quote.productos)) : [
+                    { nombre: '', descripcion: '', cantidad: 1, precio: 0 }
+                ];
+                const renderProductosTable = () => {
+                    return `
+                    <table class="w-full border mb-2" id="productosTable">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="p-2 text-xs">Nombre</th>
+                                <th class="p-2 text-xs">Descripción</th>
+                                <th class="p-2 text-xs">Cantidad</th>
+                                <th class="p-2 text-xs">Precio Unitario (€)</th>
+                                <th class="p-2 text-xs">Importe (€)</th>
+                                <th class="p-2 text-xs"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productos.map((prod, idx) => `
+                                <tr>
+                                    <td><input type="text" class="w-full border rounded p-1 text-xs" name="nombre" value="${prod.nombre}" data-idx="${idx}" /></td>
+                                    <td><input type="text" class="w-full border rounded p-1 text-xs" name="descripcion" value="${prod.descripcion}" data-idx="${idx}" /></td>
+                                    <td><input type="number" class="w-20 border rounded p-1 text-xs" name="cantidad" min="1" value="${prod.cantidad}" data-idx="${idx}" /></td>
+                                    <td><input type="number" class="w-24 border rounded p-1 text-xs" name="precio" min="0" step="0.01" value="${prod.precio}" data-idx="${idx}" /></td>
+                                    <td class="text-right text-xs">${(prod.cantidad * prod.precio).toFixed(2)}</td>
+                                    <td><button type="button" class="text-red-500" data-action="remove-producto" data-idx="${idx}"><i class="fas fa-trash"></i></button></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <button type="button" id="addProductoBtn" class="mb-2 px-3 py-1 bg-green-500 text-white rounded text-xs"><i class="fas fa-plus"></i> Agregar producto</button>
+                    `;
+                };
+                const renderTotales = () => {
+                    const base = productos.reduce((sum, p) => sum + (parseFloat(p.cantidad) * parseFloat(p.precio)), 0);
+                    const iva = base * 0.21;
+                    const total = base + iva;
+                    return `
+                        <div class="flex flex-col md:flex-row gap-2 justify-end mt-2">
+                            <div class="bg-gray-50 p-2 rounded border w-full md:w-1/3">
+                                <div class="flex justify-between text-xs mb-1"><span>Base imponible:</span><span>${base.toFixed(2)} €</span></div>
+                                <div class="flex justify-between text-xs mb-1"><span>IVA (21%):</span><span>${iva.toFixed(2)} €</span></div>
+                                <div class="flex justify-between text-xs font-bold"><span>Total:</span><span>${total.toFixed(2)} €</span></div>
+                            </div>
+                        </div>
+                    `;
+                };
+                const modalHTML = `
+                    <div id="quoteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-y-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold">${isEdit ? 'Editar Presupuesto' : 'Nuevo Presupuesto'}</h3>
+                                <button onclick="this.closest('#quoteModal').remove()" class="text-gray-500 hover:text-gray-700">
+                                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <form id="quoteForm" data-form-type="quote" class="space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Cliente *</label>
+                                        <input type="text" id="clienteName" name="cliente" required 
+                                               value="${isEdit ? quote.cliente : ''}"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Número de Presupuesto</label>
+                                        <input type="text" id="quoteNumber" name="numero" 
+                                               value="${isEdit ? quote.numero : this.generateQuoteNumber()}"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+                                        <input type="date" id="quoteDate" name="fecha" 
+                                               value="${isEdit ? quote.fecha : new Date().toISOString().split('T')[0]}"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Válido hasta</label>
+                                        <input type="date" id="validUntil" name="validez" 
+                                               value="${isEdit ? quote.validez : this.getDefaultValidityDate()}"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                                        <select id="quoteStatus" name="estado" 
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="borrador" ${isEdit && quote.estado === 'borrador' ? 'selected' : ''}>Borrador</option>
+                                            <option value="enviado" ${isEdit && quote.estado === 'enviado' ? 'selected' : ''}>Enviado</option>
+                                            <option value="aceptado" ${isEdit && quote.estado === 'aceptado' ? 'selected' : ''}>Aceptado</option>
+                                            <option value="rechazado" ${isEdit && quote.estado === 'rechazado' ? 'selected' : ''}>Rechazado</option>
+                                            <option value="vencido" ${isEdit && quote.estado === 'vencido' ? 'selected' : ''}>Vencido</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Productos</label>
+                                    <div id="productosTableContainer">${renderProductosTable()}</div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                                    <textarea id="quoteDescription" name="descripcion" rows="3"
+                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                              placeholder="Describe los servicios o productos incluidos en el presupuesto...">${isEdit ? quote.descripcion : ''}</textarea>
+                                </div>
+                                <div id="totalesContainer">${renderTotales()}</div>
+                                <div class="flex justify-end space-x-3 pt-4">
+                                    <button type="button" onclick="this.closest('#quoteModal').remove()" 
+                                            class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                        ${isEdit ? 'Actualizar' : 'Crear'} Presupuesto
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                // Eventos para productos
+                const updateProductos = () => {
+                    // Solo actualizar los datos sin regenerar la tabla
+                    const rows = document.querySelectorAll('#productosTable tbody tr');
+                    productos = Array.from(rows).map((row, idx) => {
+                        return {
+                            nombre: row.querySelector('input[name="nombre"]').value,
+                            descripcion: row.querySelector('input[name="descripcion"]').value,
+                            cantidad: parseFloat(row.querySelector('input[name="cantidad"]').value) || 1,
+                            precio: parseFloat(row.querySelector('input[name="precio"]').value) || 0
+                        };
+                    });
+                    // Solo actualizar los totales, no la tabla completa
+                    document.getElementById('totalesContainer').innerHTML = renderTotales();
+                };
+
+                const regenerateProductosTable = () => {
+                    // Esta función sí regenera la tabla completa (solo para agregar/eliminar)
+                    document.getElementById('productosTableContainer').innerHTML = renderProductosTable();
+                    document.getElementById('totalesContainer').innerHTML = renderTotales();
+                    attachProductoEvents();
+                };
+                function attachProductoEvents() {
+                    // Remover eventos existentes para evitar duplicados
+                    document.querySelectorAll('#productosTable input').forEach(input => {
+                        input.removeEventListener('input', updateProductos);
+                        input.addEventListener('input', updateProductos);
+                    });
+                    document.querySelectorAll('button[data-action="remove-producto"]').forEach(btn => {
+                        btn.removeEventListener('click', btn._clickHandler);
+                        btn._clickHandler = (e) => {
+                            const idx = parseInt(btn.getAttribute('data-idx'));
+                            productos.splice(idx, 1);
+                            regenerateProductosTable();
+                        };
+                        btn.addEventListener('click', btn._clickHandler);
+                    });
+
+                    // Solo agregar el evento del botón una vez
+                    const addBtn = document.getElementById('addProductoBtn');
+                    if (addBtn && !addBtn._hasListener) {
+                        addBtn._hasListener = true;
+                        addBtn.addEventListener('click', () => {
+                            productos.push({ nombre: '', descripcion: '', cantidad: 1, precio: 0 });
+                            regenerateProductosTable();
+                        });
+                    }
+                }
+                attachProductoEvents();
+                // Setup form submission
+                document.getElementById('quoteForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveQuote(isEdit, quote?.id, productos);
+                });
+            }
+
+            generateQuoteNumber() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const count = this.quotes.length + 1;
+                return `PRE-${year}-${count.toString().padStart(3, '0')}`;
+            }
+
+            getDefaultValidityDate() {
+                const today = new Date();
+                const validUntil = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+                return validUntil.toISOString().split('T')[0];
+            }
+
+            async saveQuote(isEdit = false, quoteId = null, productosArray = null) {
+                const form = document.getElementById('quoteForm');
+                const formData = new FormData(form);
+                const quoteData = Object.fromEntries(formData.entries());
+
+                // Convert total to number
+                quoteData.total = parseFloat(quoteData.total);
+
+                // Incluir productos en el presupuesto
+                if (productosArray) {
+                    quoteData.productos = productosArray;
+                } else {
+                    // Si no se pasan productos, usar la variable global productos
+                    quoteData.productos = typeof productos !== 'undefined' ? productos : [];
+                }
+
+                console.log('💾 Guardando presupuesto con productos:', quoteData);
+
+                if (isEdit) {
+                    // Update existing quote
+                    const index = this.quotes.findIndex(q => q.id === quoteId);
+                    if (index !== -1) {
+                        this.quotes[index] = { ...this.quotes[index], ...quoteData };
+                        if (window.app) {
+                            window.app.showNotification('Presupuesto actualizado correctamente', 'success');
+                        }
+                    }
+                } else {
+                    // Create new quote
+                    const newQuote = {
+                        id: Date.now(),
+                        ...quoteData,
+                        fecha_creacion: new Date().toISOString().split('T')[0]
+                    };
+                    this.quotes.push(newQuote);
+                    if (window.app) {
+                        window.app.showNotification('Presupuesto creado correctamente', 'success');
+                    }
+                }
+                
+                // Close modal
+                document.getElementById('quoteModal').remove();
+                
+                // Refresh the view
+                this.filterQuotes();
+                
+                // In a real app, you would save to database here
+                try {
+                    await this.saveQuotesToStorage();
+                } catch (error) {
+                    console.error('Error saving quote:', error);
+                    if (window.app) {
+                        window.app.showNotification('Error al guardar presupuesto', 'error');
+                    }
+                }
+            }
+
+            async saveQuotesToStorage() {
+                // This would save to database in a real implementation
+                // For now, we'll just log it
+                console.log('Saving quotes to storage:', this.quotes);
+            }
+
+            viewQuote(id) {
+                const quote = this.quotes.find(q => q.id === id);
+                if (quote) {
+                    this.showQuoteDetailModal(quote);
+                } else {
+                    if (window.app) {
+                        window.app.showNotification('Presupuesto no encontrado', 'error');
+                    }
+                }
+            }
+
+            showQuoteDetailModal(quote) {
+                // Validar que el presupuesto tenga productos
+                const productos = quote.productos || [];
+
+                console.log('📋 Mostrando detalles del presupuesto:', quote);
+                console.log('📦 Productos encontrados:', productos);
+
+                // Calculate totals
+                const base = productos.reduce((sum, p) => {
+                    const cantidad = parseFloat(p.cantidad) || 0;
+                    const precio = parseFloat(p.precio) || 0;
+                    return sum + (cantidad * precio);
+                }, 0);
+                const iva = base * 0.21;
+                const total = base + iva;
+                const productosTable = `
+                    <table class="w-full border mb-2 text-xs">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="p-2">Nombre</th>
+                                <th class="p-2">Descripción</th>
+                                <th class="p-2">Cantidad</th>
+                                <th class="p-2">Precio Unitario (€)</th>
+                                <th class="p-2">Importe (€)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productos.length > 0 ? productos.map(prod => `
+                                <tr>
+                                    <td class="p-2">${prod.nombre || 'Sin nombre'}</td>
+                                    <td class="p-2">${prod.descripcion || 'Sin descripción'}</td>
+                                    <td class="p-2 text-right">${prod.cantidad || 0}</td>
+                                    <td class="p-2 text-right">${parseFloat(prod.precio || 0).toFixed(2)}</td>
+                                    <td class="p-2 text-right">${((prod.cantidad || 0) * (prod.precio || 0)).toFixed(2)}</td>
+                                </tr>
+                            `).join('') : '<tr><td colspan="5" class="p-2 text-center text-gray-500">No hay productos en este presupuesto</td></tr>'}
+                        </tbody>
+                    </table>
+                `;
+                const modalHTML = `
+                    <div id="quoteDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold">Presupuesto: ${quote.numero}</h3>
+                                <button onclick="this.closest('#quoteDetailModal').remove()" class="text-gray-500 hover:text-gray-700">
+                                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <div class="text-xs text-gray-500">Cliente</div>
+                                    <div class="font-semibold">${quote.cliente}</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500">Fecha</div>
+                                    <div>${this.formatDate(quote.fecha)}</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500">Válido hasta</div>
+                                    <div>${this.formatDate(quote.validez)}</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500">Estado</div>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full ${this.getStatusColor(quote.estado)}">
+                                        ${this.getStatusText(quote.estado)}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs text-gray-500 mb-1">Descripción</div>
+                                <div class="whitespace-pre-line">${quote.descripcion || ''}</div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs text-gray-500 mb-1">Productos</div>
+                                ${productosTable}
+                            </div>
+                            <div class="flex flex-col md:flex-row gap-2 justify-end mt-2">
+                                <div class="bg-gray-50 p-2 rounded border w-full md:w-1/3">
+                                    <div class="flex justify-between text-xs mb-1"><span>Base imponible:</span><span>${base.toFixed(2)} €</span></div>
+                                    <div class="flex justify-between text-xs mb-1"><span>IVA (21%):</span><span>${iva.toFixed(2)} €</span></div>
+                                    <div class="flex justify-between text-xs font-bold"><span>Total:</span><span>${total.toFixed(2)} €</span></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-end space-x-3 pt-4">
+                                <button type="button" onclick="document.getElementById('quoteDetailModal').remove()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Cerrar</button>
+                                <button type="button" onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Exportar / Imprimir</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+            editQuote(id) {
+                const quote = this.quotes.find(q => q.id === id);
+                if (quote) {
+                    this.showQuoteForm(quote);
+                } else {
+                    if (window.app) {
+                        window.app.showNotification('Presupuesto no encontrado', 'error');
+                    }
+                }
+            }
+
+            deleteQuote(id) {
+                if (confirm('¿Estás seguro de que quieres eliminar este presupuesto?')) {
+                    this.quotes = this.quotes.filter(q => q.id !== id);
+                    this.filterQuotes();
+                    if (window.app) {
+                        window.app.showNotification('Presupuesto eliminado', 'success');
+                    }
+                }
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.presupuestosManager = new PresupuestosManager();
+        });
+    </script>
+</body>
+</html>

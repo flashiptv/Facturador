@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura - {{numeroFactura}}</title>
+    <style>
+        @media print {
+            @page {
+                size: A4;
+                margin: 2cm;
+            }
+            
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            background-color: #fff;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .invoice-container {
+            background: white;
+            min-height: 297mm;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #333;
+            padding-bottom: 15px;
+        }
+
+        .invoice-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 2px;
+        }
+
+        /* Información del emisor */
+        .company-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .company-details {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* Tabla de información de factura */
+        .invoice-info-table {
+            width: 100%;
+            margin-bottom: 25px;
+            border-collapse: collapse;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+        .invoice-info-table th {
+            background-color: #e9ecef;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            text-align: center;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .invoice-info-table td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        /* Información del cliente */
+        .client-info {
+            margin-bottom: 25px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .client-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .client-details {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* Tabla de productos/servicios */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            border: 1px solid #333;
+        }
+
+        .items-table th {
+            background-color: #e9ecef;
+            padding: 10px 8px;
+            border: 1px solid #333;
+            font-weight: bold;
+            text-align: center;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .items-table td {
+            padding: 8px;
+            border: 1px solid #333;
+            vertical-align: top;
+        }
+
+        .items-table .description {
+            text-align: left;
+            width: 50%;
+        }
+
+        .items-table .unit {
+            text-align: center;
+            width: 15%;
+        }
+
+        .items-table .price {
+            text-align: right;
+            width: 17.5%;
+        }
+
+        .items-table .amount {
+            text-align: right;
+            width: 17.5%;
+            font-weight: bold;
+        }
+
+        /* Fila de item */
+        .item-row {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .item-row:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Resumen de totales */
+        .totals-section {
+            float: right;
+            width: 300px;
+            margin-bottom: 30px;
+        }
+
+        .totals-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #333;
+        }
+
+        .totals-table th {
+            background-color: #e9ecef;
+            padding: 8px 15px;
+            border: 1px solid #333;
+            text-align: left;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .totals-table td {
+            padding: 8px 15px;
+            border: 1px solid #333;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .total-final {
+            background-color: #343a40;
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            clear: both;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .payment-info {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Utilidades */
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Espaciado para items */
+        .empty-row {
+            height: 30px;
+        }
+
+        .empty-row td {
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="invoice-title">FACTURA</h1>
+        </div>
+
+        <!-- Información del emisor -->
+        <div class="company-info">
+            <div class="company-name">{{nombreEmpresa}}</div>
+            <div class="company-details">
+                {{direccionEmpresa}}<br>
+                {{codigoPostalEmpresa}} {{ciudadEmpresa}}<br>
+                N.I.F.: {{nifEmpresa}}<br>
+                Teléfono: {{telefonoEmpresa}}<br>
+                Email: {{emailEmpresa}}
+            </div>
+        </div>
+
+        <!-- Tabla de información de factura -->
+        <table class="invoice-info-table">
+            <thead>
+                <tr>
+                    <th>FECHA</th>
+                    <th>FACTURA</th>
+                    <th>N.I.F.</th>
+                    <th>TELÉFONO</th>
+                    <th>EMAIL</th>
+                    <th>PÁG.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{fechaFactura}}</td>
+                    <td>{{numeroFactura}}</td>
+                    <td>{{nifCliente}}</td>
+                    <td>{{telefonoCliente}}</td>
+                    <td>{{emailCliente}}</td>
+                    <td>1</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Información del cliente -->
+        <div class="client-info">
+            <div class="client-title">FACTURAR A:</div>
+            <div class="client-details">
+                <strong>{{nombreCliente}}</strong><br>
+                {{direccionCliente}}<br>
+                {{codigoPostalCliente}} {{ciudadCliente}}
+            </div>
+        </div>
+
+        <!-- Tabla de productos/servicios -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th class="description">DESCRIPCIÓN</th>
+                    <th class="unit">UNIDAD</th>
+                    <th class="price">PRECIO</th>
+                    <th class="amount">IMPORTE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los items se insertarán dinámicamente aquí -->
+                {{#items}}
+                <tr class="item-row">
+                    <td class="description">{{descripcion}}</td>
+                    <td class="unit text-center">{{cantidad}} {{unidad}}</td>
+                    <td class="price text-right">{{precio}}€</td>
+                    <td class="amount text-right">{{importe}}€</td>
+                </tr>
+                {{/items}}
+                
+                <!-- Filas vacías para llenar espacio si hay pocos items -->
+                {{#emptyRows}}
+                <tr class="empty-row">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {{/emptyRows}}
+            </tbody>
+        </table>
+
+        <!-- Sección de totales -->
+        <div class="totals-section">
+            <table class="totals-table">
+                <tr>
+                    <th>BASE</th>
+                    <td>{{baseImponible}}€</td>
+                </tr>
+                <tr>
+                    <th>IVA ({{porcentajeIva}}%)</th>
+                    <td>{{importeIva}}€</td>
+                </tr>
+                <tr class="total-final">
+                    <th>TOTAL</th>
+                    <td>{{totalFactura}}€</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="payment-info">
+                <strong>Forma de pago:</strong> Transferencia a cuenta ES18 2100 4401 2513 0035 9149
+            </div>
+            <div style="margin-top: 15px; font-size: 10px; color: #888;">
+                Factura generada el {{fechaGeneracion}} - Página 1 de 1
+            </div>
+        </div>
+    </div>
+</body>
+</html>

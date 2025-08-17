@@ -29,11 +29,11 @@ class AuthenticationSystem {
                     // Verificar que el usuario aún existe en la base de datos
                     const user = await ipcRenderer.invoke('db-get-user-by-id', sessionData.userId);
                     
-                    if (user && user.activo) {
+                    if (user) {
                         this.currentUser = {
                             id: user.id,
                             email: user.email,
-                            nombre: user.nombre,
+                            nombre: user.name,
                             loginTime: sessionData.loginTime
                         };
                         
@@ -65,12 +65,8 @@ class AuthenticationSystem {
                 throw new Error('Usuario no encontrado');
             }
 
-            if (!user.activo) {
-                throw new Error('Cuenta desactivada');
-            }
-
             // Verificar contraseña usando IPC
-            const isValidPassword = await ipcRenderer.invoke('auth-verify-password', password, user.password_hash);
+            const isValidPassword = await ipcRenderer.invoke('auth-verify-password', password, user.password);
             
             if (!isValidPassword) {
                 throw new Error('Contraseña incorrecta');
@@ -82,7 +78,7 @@ class AuthenticationSystem {
             this.currentUser = {
                 id: user.id,
                 email: user.email,
-                nombre: user.nombre,
+                nombre: user.name,
                 loginTime: loginTime
             };
 
@@ -114,44 +110,57 @@ class AuthenticationSystem {
 
     async register(userData) {
         try {
+            console.log('🔄 Iniciando proceso de registro con datos:', userData);
             const { nombre, email, password, confirmPassword } = userData;
 
             // Validaciones
+            console.log('✅ Validando campos requeridos...');
             if (!nombre || !email || !password || !confirmPassword) {
                 throw new Error('Todos los campos son requeridos');
             }
 
+            console.log('✅ Validando coincidencia de contraseñas...');
             if (password !== confirmPassword) {
                 throw new Error('Las contraseñas no coinciden');
             }
 
+            console.log('✅ Validando longitud de contraseña...');
             if (password.length < 6) {
                 throw new Error('La contraseña debe tener al menos 6 caracteres');
             }
 
+            console.log('✅ Validando formato de email...');
             if (!this.isValidEmail(email)) {
                 throw new Error('Email no válido');
             }
 
             // Verificar si el usuario ya existe
+            console.log('🔍 Verificando si el usuario ya existe...');
             const existingUser = await ipcRenderer.invoke('db-get-user-by-email', email);
+            console.log('Resultado de búsqueda de usuario existente:', existingUser);
             if (existingUser) {
                 throw new Error('Ya existe un usuario con este email');
             }
 
             // Hash de la contraseña usando IPC
+            console.log('🔐 Hasheando contraseña...');
             const passwordHash = await ipcRenderer.invoke('auth-hash-password', password);
+            console.log('Hash de contraseña generado:', passwordHash ? 'SÍ' : 'NO');
 
             // Crear usuario en la base de datos
+            console.log('💾 Creando usuario en la base de datos...');
             const newUser = {
                 name: nombre.trim(),
                 email: email.trim().toLowerCase(),
                 password: passwordHash
             };
+            console.log('Datos del nuevo usuario:', newUser);
 
             const userId = await ipcRenderer.invoke('db-create-user', newUser);
+            console.log('Resultado de creación de usuario:', userId);
 
             if (userId) {
+                console.log('✅ Usuario registrado exitosamente con ID:', userId);
                 return {
                     success: true,
                     message: 'Usuario registrado exitosamente'
@@ -161,7 +170,7 @@ class AuthenticationSystem {
             }
 
         } catch (error) {
-            console.error('Error en registro:', error);
+            console.error('❌ Error en registro:', error);
             return {
                 success: false,
                 error: error.message

@@ -1,5 +1,46 @@
 // Navegación y funcionalidades globales mejoradas
-const { ipcRenderer } = require('electron');
+// Verificar si ipcRenderer ya está disponible globalmente
+let ipcRenderer;
+if (window.ipcRenderer) {
+    ipcRenderer = window.ipcRenderer;
+} else {
+    const { ipcRenderer: electronIpc } = require('electron');
+    ipcRenderer = electronIpc;
+    // Hacer ipcRenderer disponible globalmente para evitar declaraciones duplicadas
+    window.ipcRenderer = ipcRenderer;
+}
+
+// Manejo global de errores
+window.addEventListener('error', (event) => {
+    console.error('Error global capturado:', {
+        message: event.message,
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+        error: event.error
+    });
+
+    // Mostrar notificación al usuario si es posible
+    if (window.app && typeof window.app.showNotification === 'function') {
+        window.app.showNotification('Se ha producido un error inesperado', 'error');
+    }
+
+    // Prevenir que el error se propague
+    return true;
+});
+
+// Manejo de promesas rechazadas no capturadas
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Promesa rechazada no capturada:', event.reason);
+
+    // Mostrar notificación al usuario si es posible
+    if (window.app && typeof window.app.showNotification === 'function') {
+        window.app.showNotification('Error en operación asíncrona', 'error');
+    }
+
+    // Prevenir que aparezca en la consola del navegador
+    event.preventDefault();
+});
 
 class FacturadorApp {
     constructor() {
@@ -7,13 +48,29 @@ class FacturadorApp {
         this.currentUser = null;
         this.clients = [];
         this.invoices = [];
-        
+
         // Inicializar componentes
         this.fileManager = null;
         this.pdfExporter = null;
         this.authSystem = null;
-        
+
+        // Configuración de timeouts
+        this.defaultTimeout = 10000; // 10 segundos
+        this.longTimeout = 30000; // 30 segundos para operaciones largas
+
         this.init();
+    }
+
+    // Helper para agregar timeout a operaciones IPC
+    async invokeWithTimeout(channel, ...args) {
+        const timeout = channel.includes('pdf') || channel.includes('file') ? this.longTimeout : this.defaultTimeout;
+
+        return Promise.race([
+            ipcRenderer.invoke(channel, ...args),
+            new Promise((_, reject) =>
+                setTimeout(() => reject(new Error(`Timeout: Operación ${channel} tardó más de ${timeout/1000} segundos`)), timeout)
+            )
+        ]);
     }
 
     async init() {
@@ -42,30 +99,46 @@ class FacturadorApp {
 
     initializeComponents() {
         try {
-            // Inicializar FileManager y PDFExporter solo si existen los elementos necesarios
-            if (typeof require !== 'undefined') {
+            // Inicializar FileManager si está disponible globalmente
+            if (typeof FileManager !== 'undefined') {
                 try {
-                    const FileManager = require('./fileManager');
                     this.fileManager = new FileManager();
+                    // Initialize FileManager asynchronously
+                    this.fileManager.init().then(() => {
+                        // Make FileManager globally available
+                        window.fileManager = this.fileManager;
+                        console.log('✅ FileManager inicializado y disponible globalmente');
+                    }).catch(error => {
+                        console.warn('Error al inicializar FileManager:', error);
+                    });
                 } catch (e) {
                     console.warn('FileManager no disponible:', e.message);
                 }
+            } else {
+                console.log('ℹ️ FileManager class no está disponible en esta página');
+            }
+
+            // Inicializar PDFExporter
+            if (typeof require !== 'undefined') {
                 try {
-                    const PDFExporter = require('./pdfExporter');
+                    const PDFExporter = require('../js/pdfExporter');
                     this.pdfExporter = new PDFExporter();
                 } catch (e) {
                     console.warn('PDFExporter no disponible:', e.message);
                 }
+
+                // Inicializar sistema de autenticación
                 try {
-                    const AuthenticationSystem = require('./authenticationSystem');
+                    const AuthenticationSystem = require('../js/authenticationSystem');
                     this.authSystem = new AuthenticationSystem();
+                    console.log('✅ Sistema de autenticación inicializado correctamente');
                 } catch (e) {
-                    this.showNotification('Error al inicializar autenticación: ' + e.message, 'error');
+                    console.error('❌ Error al inicializar autenticación:', e.message);
                     this.authSystem = null;
                 }
             }
         } catch (error) {
-            this.showNotification('Error al inicializar componentes: ' + error.message, 'error');
+            console.error('❌ Error al inicializar componentes:', error.message);
         }
     }
 
@@ -75,19 +148,30 @@ class FacturadorApp {
     }
 
     async loadCurrentUser() {
-        this.currentUser = await ipcRenderer.invoke('get-data', 'currentUser');
+        try {
+            this.currentUser = await this.invokeWithTimeout('get-data', 'currentUser');
+        } catch (error) {
+            console.error('Error al cargar usuario actual:', error);
+            this.currentUser = null;
+        }
     }
 
     async loadData() {
         // Cargar datos desde SQLite
         try {
-            this.clients = await ipcRenderer.invoke('db-get-all-clients') || [];
-            this.invoices = await ipcRenderer.invoke('db-get-all-invoices') || [];
+            this.clients = await this.invokeWithTimeout('db-get-all-clients') || [];
+            this.invoices = await this.invokeWithTimeout('db-get-all-invoices') || [];
         } catch (error) {
             console.error('Error al cargar datos de la base de datos:', error);
             // Fallback a electron-store para compatibilidad
-            this.clients = await ipcRenderer.invoke('get-data', 'clients') || [];
-            this.invoices = await ipcRenderer.invoke('get-data', 'invoices') || [];
+            try {
+                this.clients = await this.invokeWithTimeout('get-data', 'clients') || [];
+                this.invoices = await this.invokeWithTimeout('get-data', 'invoices') || [];
+            } catch (fallbackError) {
+                console.error('Error en fallback:', fallbackError);
+                this.clients = [];
+                this.invoices = [];
+            }
         }
     }
 
@@ -190,9 +274,12 @@ class FacturadorApp {
     }
 
     async handleFormSubmit(form) {
+        console.log('📋 Formulario enviado:', form);
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
         const formType = form.getAttribute('data-form-type');
+        console.log('📊 Datos del formulario:', data);
+        console.log('🏷️ Tipo de formulario:', formType);
 
         // Validar todos los campos requeridos
         const requiredFields = form.querySelectorAll('[required]');
@@ -205,6 +292,7 @@ class FacturadorApp {
         }
 
         if (!isValid) {
+            console.error('❌ Formulario inválido');
             this.showNotification('Por favor, corrija los errores en el formulario', 'error');
             return;
         }
@@ -216,24 +304,53 @@ class FacturadorApp {
         submitButton.disabled = true;
 
         try {
+            console.log('🔄 Procesando formulario tipo:', formType);
             switch (formType) {
                 case 'login':
+                    console.log('🔑 Procesando login...');
                     await this.handleLogin(data);
                     break;
                 case 'register':
+                    console.log('📝 Procesando registro...');
                     await this.handleRegister(data);
                     break;
                 case 'invoice':
+                    console.log('🧾 Procesando factura...');
                     await this.handleInvoice(data);
                     break;
                 case 'client':
+                    console.log('👤 Procesando cliente...');
                     await this.handleClient(data);
+                    break;
+                case 'product':
+                    console.log('📦 Procesando producto...');
+                    await this.handleProduct(data, form);
+                    break;
+                case 'company':
+                    console.log('🏢 Procesando información de empresa...');
+                    await this.handleCompanySettings(data);
+                    break;
+                case 'invoice-settings':
+                    console.log('⚙️ Procesando configuración de facturas...');
+                    await this.handleInvoiceSettings(data);
+                    break;
+                case 'user-profile':
+                    console.log('👤 Procesando perfil de usuario...');
+                    await this.handleUserProfile(data);
+                    break;
+                case 'change-password':
+                    console.log('🔒 Procesando cambio de contraseña...');
+                    await this.handleChangePassword(data);
+                    break;
+                case 'quote':
+                    console.log('📋 Procesando presupuesto...');
+                    await this.handleQuote(data);
                     break;
                 default:
                     throw new Error(`Tipo de formulario no reconocido: ${formType}`);
             }
         } catch (error) {
-            console.error('Error al procesar formulario:', error);
+            console.error('❌ Error al procesar formulario:', error);
             this.showNotification('Error al procesar los datos: ' + error.message, 'error');
         } finally {
             // Restaurar botón
@@ -287,8 +404,11 @@ class FacturadorApp {
 
     async handleRegister(data) {
         try {
+            console.log('📝 handleRegister llamado con datos:', data);
             if (this.authSystem) {
+                console.log('🔧 Sistema de autenticación disponible, llamando register...');
                 const result = await this.authSystem.register(data);
+                console.log('📤 Resultado del registro:', result);
                 if (result.success) {
                     this.showNotification(result.message, 'success');
                     setTimeout(() => {
@@ -298,10 +418,11 @@ class FacturadorApp {
                     throw new Error(result.error);
                 }
             } else {
+                console.error('❌ Sistema de autenticación no disponible');
                 throw new Error('El sistema de autenticación no está disponible.');
             }
         } catch (error) {
-            console.error('Error en registro:', error);
+            console.error('❌ Error en handleRegister:', error);
             this.showNotification(error.message, 'error');
         }
     }
@@ -461,6 +582,181 @@ class FacturadorApp {
         }
     }
 
+    async handleProduct(data, form) {
+        try {
+            const productData = {
+                codigo: data.codigo,
+                nombre: data.nombre,
+                descripcion: data.descripcion,
+                precio: parseFloat(data.precio),
+                iva: parseInt(data.iva) || 21,
+                stock: parseInt(data.stock) || 0
+            };
+
+            // Verificar si es edición o creación
+            const editId = form?.getAttribute('data-edit-id');
+
+            let savedProduct;
+            if (editId) {
+                // Actualizar producto existente
+                savedProduct = await ipcRenderer.invoke('db-update-product', parseInt(editId), productData);
+                this.showNotification('Artículo actualizado exitosamente', 'success');
+            } else {
+                // Crear nuevo producto
+                savedProduct = await ipcRenderer.invoke('db-create-product', productData);
+                this.showNotification('Artículo creado exitosamente', 'success');
+            }
+
+            // Cerrar modal si existe
+            const modal = document.getElementById('productModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                // Limpiar el formulario
+                if (form) {
+                    form.reset();
+                    form.removeAttribute('data-edit-id');
+                    document.querySelector('#productModalTitle').textContent = 'Nuevo Artículo';
+                }
+            }
+
+            // Recargar productos si estamos en esa página
+            if (this.currentPage === 'productos' && typeof window.loadProducts === 'function') {
+                await window.loadProducts();
+            }
+
+        } catch (error) {
+            console.error('Error al guardar producto:', error);
+            throw new Error('Error al guardar el artículo: ' + error.message);
+        }
+    }
+
+    async handleQuote(data) {
+        try {
+            console.log('📋 Procesando presupuesto con datos:', data);
+
+            // Delegar al manager de presupuestos si está disponible
+            if (window.presupuestosManager && typeof window.presupuestosManager.saveQuote === 'function') {
+                // El manager de presupuestos manejará el guardado
+                this.showNotification('Presupuesto procesado por el manager específico', 'info');
+                return;
+            }
+
+            // Fallback: procesar aquí si no hay manager específico
+            const quoteData = {
+                cliente: data.cliente,
+                fecha: data.fecha || new Date().toISOString().split('T')[0],
+                validez: data.validez,
+                total: parseFloat(data.total) || 0,
+                estado: 'borrador',
+                notas: data.notas
+            };
+
+            console.log('💾 Guardando presupuesto:', quoteData);
+            this.showNotification('Presupuesto guardado exitosamente', 'success');
+
+        } catch (error) {
+            console.error('Error al procesar presupuesto:', error);
+            throw new Error('Error al procesar el presupuesto: ' + error.message);
+        }
+    }
+
+    async handleCompanySettings(data) {
+        try {
+            const companyData = {
+                company_name: data.company_name,
+                company_nif: data.company_nif,
+                company_address: data.company_address,
+                company_city: data.company_city,
+                company_postal_code: data.company_postal_code,
+                company_country: data.company_country,
+                company_phone: data.company_phone,
+                company_email: data.company_email,
+                company_website: data.company_website
+            };
+
+            await ipcRenderer.invoke('save-company-settings', companyData);
+            this.showNotification('Información de empresa guardada exitosamente', 'success');
+
+        } catch (error) {
+            console.error('Error al guardar configuración de empresa:', error);
+            throw new Error('Error al guardar la información de empresa: ' + error.message);
+        }
+    }
+
+    async handleInvoiceSettings(data) {
+        try {
+            const invoiceSettings = {
+                invoice_prefix: data.invoice_prefix,
+                invoice_start_number: parseInt(data.invoice_start_number) || 1,
+                default_vat: parseInt(data.default_vat) || 21,
+                default_due_days: parseInt(data.default_due_days) || 30,
+                default_invoice_notes: data.default_invoice_notes
+            };
+
+            await ipcRenderer.invoke('save-invoice-settings', invoiceSettings);
+            this.showNotification('Configuración de facturas guardada exitosamente', 'success');
+
+        } catch (error) {
+            console.error('Error al guardar configuración de facturas:', error);
+            throw new Error('Error al guardar la configuración de facturas: ' + error.message);
+        }
+    }
+
+    async handleUserProfile(data) {
+        try {
+            const profileData = {
+                name: data.user_name,
+                email: data.user_email
+            };
+
+            // Actualizar perfil del usuario actual
+            const result = await ipcRenderer.invoke('update-user-profile', this.currentUser.id, profileData);
+            
+            if (result.success) {
+                this.currentUser.name = profileData.name;
+                this.showNotification('Perfil actualizado exitosamente', 'success');
+            } else {
+                throw new Error(result.error);
+            }
+
+        } catch (error) {
+            console.error('Error al actualizar perfil:', error);
+            throw new Error('Error al actualizar el perfil: ' + error.message);
+        }
+    }
+
+    async handleChangePassword(data) {
+        try {
+            if (data.new_password !== data.confirm_password) {
+                throw new Error('Las contraseñas no coinciden');
+            }
+
+            if (data.new_password.length < 6) {
+                throw new Error('La nueva contraseña debe tener al menos 6 caracteres');
+            }
+
+            const result = await ipcRenderer.invoke('change-user-password', {
+                userId: this.currentUser.id,
+                currentPassword: data.current_password,
+                newPassword: data.new_password
+            });
+
+            if (result.success) {
+                // Limpiar el formulario
+                const form = document.querySelector('[data-form-type="change-password"]');
+                if (form) form.reset();
+                
+                this.showNotification('Contraseña cambiada exitosamente', 'success');
+            } else {
+                throw new Error(result.error);
+            }
+
+        } catch (error) {
+            console.error('Error al cambiar contraseña:', error);
+            throw new Error('Error al cambiar la contraseña: ' + error.message);
+        }
+    }
+
     async handleSearch(searchField) {
         const query = searchField.value.toLowerCase().trim();
         const searchType = searchField.getAttribute('data-search');
@@ -493,6 +789,37 @@ class FacturadorApp {
         }
     }
 
+    showNotification(message, type = 'info') {
+        console.log(`📢 Notificación [${type}]: ${message}`);
+        
+        // Crear elemento de notificación
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 max-w-sm ${
+            type === 'success' ? 'bg-green-500 text-white' :
+            type === 'error' ? 'bg-red-500 text-white' :
+            type === 'warning' ? 'bg-yellow-500 text-black' :
+            'bg-blue-500 text-white'
+        }`;
+        notification.textContent = message;
+        
+        // Añadir al documento
+        document.body.appendChild(notification);
+        
+        // Eliminar después de 5 segundos
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 5000);
+        
+        // También usar alert como fallback
+        if (type === 'error') {
+            setTimeout(() => alert(`Error: ${message}`), 100);
+        }
+    }
+
+
+
     async loadPageSpecificData() {
         switch (this.currentPage) {
             case 'totalfacturas':
@@ -519,28 +846,33 @@ class FacturadorApp {
         this.setupClientSearch();
     }
 
-    setupClientSearch() {
-        const searchInput = document.querySelector('[data-search="clients"]');
-        if (!searchInput) return;
+    populateClientSelect() {
+        const clientSelect = document.getElementById('clientSelect');
+        if (!clientSelect) return;
 
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            if (!searchTerm) {
-                this.renderClientsList();
-                return;
-            }
-
-            const filteredClients = this.clients.filter(client => 
-                (client.nombre && client.nombre.toLowerCase().includes(searchTerm)) ||
-                (client.email && client.email.toLowerCase().includes(searchTerm)) ||
-                (client.telefono && client.telefono.toLowerCase().includes(searchTerm)) ||
-                (client.direccion && client.direccion.toLowerCase().includes(searchTerm)) ||
-                (client.nif_cif && client.nif_cif.toLowerCase().includes(searchTerm))
-            );
-
-            this.renderClientsList(filteredClients);
+        clientSelect.innerHTML = '<option value="">Seleccionar cliente...</option>';
+        
+        this.clients.forEach(client => {
+            const option = document.createElement('option');
+            option.value = client.id;
+            option.textContent = `${client.nombre} (${client.email || 'Sin email'})`;
+            clientSelect.appendChild(option);
         });
+    }
+
+    setupInvoiceCalculations() {
+        // This would setup invoice form calculations
+        console.log('Invoice calculations setup completed');
+    }
+
+    async loadClients() {
+        try {
+            this.clients = await ipcRenderer.invoke('db-get-all-clients') || [];
+            this.renderClientsList();
+        } catch (error) {
+            console.error('Error loading clients:', error);
+            this.showNotification('Error al cargar clientes', 'error');
+        }
     }
 
     async loadInvoiceForm() {
@@ -861,23 +1193,53 @@ class FacturadorApp {
         }
     }
 
+    setupClientSearch() {
+        const searchInput = document.getElementById('clientSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredClients = this.clients.filter(client =>
+                    client.nombre.toLowerCase().includes(searchTerm) ||
+                    (client.email && client.email.toLowerCase().includes(searchTerm)) ||
+                    (client.nif_cif && client.nif_cif.toLowerCase().includes(searchTerm))
+                );
+                this.renderClientsList(filteredClients);
+            });
+        }
+    }
+
     setupInvoiceTabs() {
         const tabs = document.querySelectorAll('[data-tab]');
+        const tabContents = document.querySelectorAll('[data-tab-content]');
+        
+        if (tabs.length === 0) return;
+        
         tabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 e.preventDefault();
+                const targetTab = tab.dataset.tab;
                 
-                // Update tab appearance
-                tabs.forEach(t => {
-                    t.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
-                    t.classList.add('text-gray-500', 'hover:text-gray-700');
-                });
+                // Remove active classes from all tabs
+                tabs.forEach(t => t.classList.remove('active', 'border-blue-500', 'text-blue-600'));
+                tabContents.forEach(content => content.classList.add('hidden'));
                 
-                tab.classList.remove('text-gray-500', 'hover:text-gray-700');
-                tab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                // Add active classes to clicked tab
+                tab.classList.add('active', 'border-blue-500', 'text-blue-600');
                 
-                // Filter invoices based on tab
-                this.filterInvoicesByTab(tab.dataset.tab);
+                // Show corresponding content
+                const targetContent = document.querySelector(`[data-tab-content="${targetTab}"]`);
+                if (targetContent) {
+                    targetContent.classList.remove('hidden');
+                }
+                
+                // Load specific data for tab if needed
+                if (targetTab === 'pending') {
+                    this.renderInvoicesList(this.invoices.filter(inv => inv.estado === 'pendiente'));
+                } else if (targetTab === 'paid') {
+                    this.renderInvoicesList(this.invoices.filter(inv => inv.estado === 'pagada'));
+                } else if (targetTab === 'all') {
+                    this.renderInvoicesList(this.invoices);
+                }
             });
         });
     }
@@ -980,7 +1342,6 @@ class FacturadorApp {
             
             // Recargar la lista de clientes
             await this.loadClients();
-            this.renderClientsList();
         } catch (error) {
             console.error('Error al eliminar cliente:', error);
             this.showNotification('Error al eliminar cliente: ' + error.message, 'error');

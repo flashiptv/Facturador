@@ -117,13 +117,17 @@
 
               <!-- Upload Area -->
               <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-                <div class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-[#d4dce2] px-6 py-14" id="dropZone">
+                <div class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-[#d4dce2] px-6 py-14" id="dropZone" data-external-file-handler="true">
                   <div class="flex max-w-[480px] flex-col items-center gap-2">
                     <svg width="48" height="48" fill="currentColor" viewBox="0 0 256 256" class="text-gray-400">
                       <path d="M224,152a8,8,0,0,1-8,8H192v16a8,8,0,0,1-16,0V160H152a8,8,0,0,1,0-16h24V128a8,8,0,0,1,16,0v16h24A8,8,0,0,1,224,152ZM48,180H76.69L132.69,124a12,12,0,0,1,17,0L176,150.34A8,8,0,1,0,187.31,139L161,112.69a28,28,0,0,0-39.6,0L84.69,150l-15-15A12,12,0,0,0,52.69,135L28,159.65A8,8,0,0,0,39.31,171l20-20,52,52A8,8,0,0,0,117,200H48a8,8,0,0,1,0-16ZM96,88a24,24,0,1,0-24-24A24,24,0,0,0,96,88Z"></path>
                     </svg>
                     <p class="text-[#101518] text-lg font-bold leading-tight tracking-[-0.015em] max-w-[480px] text-center">Arrastra y suelta tus archivos aquí</p>
-                    <p class="text-[#101518] text-sm font-normal leading-normal max-w-[480px] text-center">Formatos compatibles: JPG, PNG, PDF, DOCX, XLSX (Máximo 10MB por archivo)</p>
+                    <p class="text-[#101518] text-sm font-normal leading-normal max-w-[480px] text-center">Formatos compatibles: JPG, PNG, PDF, DOCX, XLSX, XLS, TXT, CSV (Máximo 10MB por archivo)</p>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3 max-w-[480px]">
+                      <p class="text-blue-800 text-xs font-semibold text-center">🔄 Extracción Automática de Datos</p>
+                      <p class="text-blue-700 text-xs text-center mt-1">CSV/Excel: Importa clientes y productos | PDF: Análisis de texto | Imágenes: Almacenamiento</p>
+                    </div>
                   </div>
                   <button
                     class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-blue-600 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700"
@@ -131,7 +135,7 @@
                   >
                     <span class="truncate">Buscar archivos</span>
                   </button>
-                  <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.docx,.xlsx" class="hidden">
+                  <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.docx,.xlsx,.xls,.txt,.csv" class="hidden">
                 </div>
                 
                 <!-- Upload Progress -->
@@ -230,7 +234,50 @@
             </div>
             <div>
               <h3 class="font-semibold">Formatos admitidos:</h3>
-              <p class="text-sm text-gray-600">JPG, PNG, PDF, DOCX, XLSX (máximo 10MB por archivo)</p>
+              <p class="text-sm text-gray-600">JPG, PNG, PDF, DOCX, XLSX, XLS, TXT, CSV (máximo 10MB por archivo)</p>
+            </div>
+            <div>
+              <h3 class="font-semibold text-blue-600">🔄 Extracción Automática de Datos:</h3>
+              <div class="bg-blue-50 p-3 rounded-lg">
+                <p class="text-sm text-gray-700 font-medium mb-2">¡El sistema extrae datos automáticamente de múltiples formatos!</p>
+                <div class="space-y-2">
+                  <div>
+                    <p class="text-sm font-semibold text-green-600">📊 Archivos CSV/Excel:</p>
+                    <ul class="text-xs text-gray-600 ml-4 list-disc">
+                      <li><strong>Clientes:</strong> Detecta columnas como "nombre", "email", "telefono", "direccion", "nif_cif"</li>
+                      <li><strong>Productos:</strong> Detecta columnas como "codigo", "nombre", "precio", "categoria", "iva"</li>
+                      <li>Los datos se importan automáticamente a la base de datos</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-green-600">📄 Archivos PDF:</p>
+                    <ul class="text-xs text-gray-600 ml-4 list-disc">
+                      <li>Extrae texto completo del documento</li>
+                      <li>Encuentra emails, teléfonos, precios y NIFs automáticamente</li>
+                      <li>Detecta información estructurada de clientes y productos</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-green-600">🖼️ Imágenes (JPG/PNG):</p>
+                    <ul class="text-xs text-gray-600 ml-4 list-disc">
+                      <li>Análisis básico de metadatos de imagen</li>
+                      <li>Almacenamiento seguro para referencias futuras</li>
+                      <li>OCR disponible a través de servicios externos</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-green-600">📄 Archivos TXT:</p>
+                    <ul class="text-xs text-gray-600 ml-4 list-disc">
+                      <li>Extrae emails, teléfonos y precios del texto</li>
+                      <li>Analiza patrones estructurados en el contenido</li>
+                    </ul>
+                  </div>                    <div class="bg-yellow-50 border border-yellow-200 p-2 rounded">
+                      <p class="text-xs text-yellow-800">
+                        <strong>Nota:</strong> Los archivos PDF requieren procesamiento adicional. Las imágenes se almacenan para futuras mejoras de OCR.
+                      </p>
+                    </div>
+                </div>
+              </div>
             </div>
             <div>
               <h3 class="font-semibold">Gestión de archivos:</h3>
@@ -266,5 +313,237 @@
           }
         });
       }
+
+      function downloadSampleCSV(type) {
+        let csvContent = '';
+        let filename = '';
+        
+        if (type === 'clients') {
+          csvContent = `nombre,email,telefono,direccion,ciudad,codigo_postal,nif_cif
+Juan Pérez,juan@email.com,666123456,Calle Principal 123,Madrid,28001,12345678A
+María García,maria@email.com,666654321,Avenida Central 456,Barcelona,08001,87654321B
+Carlos López,carlos@email.com,666789012,Plaza Mayor 789,Valencia,46001,11223344C`;
+          filename = 'ejemplo_clientes.csv';
+        } else if (type === 'products') {
+          csvContent = `codigo,nombre,descripcion,precio,categoria,unidad,iva
+PROD001,Producto A,Descripción del producto A,25.99,Electrónicos,ud,21
+PROD002,Producto B,Descripción del producto B,15.50,Ropa,ud,21
+PROD003,Servicio C,Descripción del servicio C,100.00,Servicios,hora,21`;
+          filename = 'ejemplo_productos.csv';
+        }
+        
+        // Crear y descargar el archivo
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Mostrar notificación
+        window.app.showNotification(`📥 Archivo ${filename} descargado correctamente`, 'success');
+      }
+
+      function downloadSampleExcel(type) {
+        // Since we can't create actual Excel files in the browser easily,
+        // we'll create a more detailed CSV that can be opened in Excel
+        let csvContent = '';
+        let filename = '';
+        
+        if (type === 'clients') {
+          csvContent = `nombre,email,telefono,direccion,ciudad,codigo_postal,nif_cif,notas
+"Juan Pérez Martínez",juan.perez@email.com,666123456,"Calle Principal 123, 2º A",Madrid,28001,12345678A,"Cliente preferente desde 2020"
+"María García López",maria.garcia@empresa.com,666654321,"Avenida Central 456",Barcelona,08001,87654321B,"Empresa de construcción"
+"Carlos López Fernández",carlos.lopez@email.com,666789012,"Plaza Mayor 789, Local 3",Valencia,46001,11223344C,"Autónomo - diseñador gráfico"
+"Ana Rodríguez Silva",ana.rodriguez@tienda.com,666456789,"Calle Comercio 321",Sevilla,41001,22334455D,"Tienda de ropa online"
+"David Martín González",david.martin@email.com,666567890,"Avenida Libertad 654",Bilbao,48001,33445566E,"Consultor IT"`;
+          filename = 'ejemplo_clientes_excel.csv';
+        }
+        
+        // Crear y descargar el archivo
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Mostrar notificación
+        window.app.showNotification(`📊 Archivo ${filename} descargado (abre con Excel)`, 'success');
+      }
+
+      // Initialize file upload functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const selectFilesBtn = document.getElementById('selectFilesBtn');
+        
+        // Ensure FileManager is available
+        setTimeout(() => {
+          if (!window.fileManager && typeof FileManager !== 'undefined') {
+            try {
+              window.fileManager = new FileManager();
+              window.fileManager.init();
+              console.log('🔄 FileManager inicializado desde la página de subida');
+            } catch (e) {
+              console.warn('No se pudo inicializar FileManager desde la página:', e.message);
+            }
+          }
+        }, 1000);
+        
+        // Handle file selection button
+        selectFilesBtn.addEventListener('click', () => {
+          fileInput.click();
+        });
+        
+        // Handle file selection
+        fileInput.addEventListener('change', (e) => {
+          handleFiles(e.target.files);
+        });
+        
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dropZone.classList.add('border-blue-500', 'bg-blue-50');
+        });
+        
+        dropZone.addEventListener('dragleave', (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+          handleFiles(e.dataTransfer.files);
+        });
+        
+        function handleFiles(files) {
+          if (files.length === 0) return;
+          
+          // Prevent multiple simultaneous processing
+          if (window.fileProcessingInProgress) {
+            console.log('⚠️ Ya hay un procesamiento en curso, esperando...');
+            return;
+          }
+          
+          window.fileProcessingInProgress = true;
+          
+          // Check FileManager status for debugging
+          checkFileManagerStatus();
+          
+          // Show progress
+          const progressElement = document.getElementById('uploadProgress');
+          const progressBar = document.getElementById('progressBar');
+          const statusElement = document.getElementById('uploadStatus');
+          
+          progressElement.classList.remove('hidden');
+          progressBar.style.width = '0%';
+          statusElement.textContent = 'Procesando archivos...';
+          
+          // Function to attempt file processing
+          async function attemptFileProcessing() {
+            // Check multiple possible FileManager locations
+            let fileManager = null;
+            
+            if (window.app && window.app.fileManager) {
+              fileManager = window.app.fileManager;
+              console.log('📁 Usando window.app.fileManager');
+            } else if (window.fileManager) {
+              fileManager = window.fileManager;
+              console.log('📁 Usando window.fileManager');
+            } else if (typeof FileManager !== 'undefined') {
+              // Try to create a new instance
+              try {
+                fileManager = new FileManager();
+                await fileManager.init();
+                console.log('📁 Creado nuevo FileManager');
+              } catch (e) {
+                console.warn('No se pudo crear FileManager:', e.message);
+              }
+            }
+            
+            if (fileManager && typeof fileManager.processFiles === 'function') {
+              try {
+                console.log(`🚀 Procesando ${files.length} archivo(s) con FileManager`);
+                const results = await fileManager.processFiles(files);
+                progressBar.style.width = '100%';
+                statusElement.textContent = 'Archivos procesados exitosamente';
+                
+                // Hide progress after 2 seconds
+                setTimeout(() => {
+                  progressElement.classList.add('hidden');
+                }, 2000);
+                
+                // Show notification - avoid duplicate notifications since processFiles already shows them
+                console.log(`✅ Procesamiento completado: ${results.length} archivo(s)`);
+              } catch (error) {
+                console.error('Error al procesar archivos:', error);
+                statusElement.textContent = 'Error al procesar archivos';
+                window.app.showNotification('❌ Error al procesar archivos', 'error');
+                
+                // Hide progress after 3 seconds
+                setTimeout(() => {
+                  progressElement.classList.add('hidden');
+                }, 3000);
+              } finally {
+                // Always release the processing flag
+                window.fileProcessingInProgress = false;
+              }
+            } else {
+              // Fallback: still store files even if FileManager isn't available
+              console.warn('FileManager no disponible, usando método de respaldo');
+              statusElement.textContent = 'Archivos seleccionados (funcionalidad limitada)';
+              
+              // Show basic success message
+              window.app.showNotification(`📁 ${files.length} archivo(s) seleccionado(s) (funcionalidad limitada)`, 'warning');
+              
+              setTimeout(() => {
+                progressElement.classList.add('hidden');
+                window.fileProcessingInProgress = false; // Release flag
+              }, 2000);
+            }
+          }
+          
+          // Try immediately, then retry if needed
+          attemptFileProcessing().catch(error => {
+            console.error('Error en procesamiento de archivos:', error);
+            statusElement.textContent = 'Error al procesar archivos';
+            window.app.showNotification('❌ Error al procesar archivos', 'error');
+            
+            setTimeout(() => {
+              progressElement.classList.add('hidden');
+              window.fileProcessingInProgress = false; // Release flag
+            }, 3000);
+          });
+        }
+        
+        // Debug function to check FileManager availability
+        function checkFileManagerStatus() {
+          const statuses = [];
+          
+          if (window.app) statuses.push('✅ window.app disponible');
+          else statuses.push('❌ window.app no disponible');
+          
+          if (window.app && window.app.fileManager) statuses.push('✅ window.app.fileManager disponible');
+          else statuses.push('❌ window.app.fileManager no disponible');
+          
+          if (window.fileManager) statuses.push('✅ window.fileManager disponible');
+          else statuses.push('❌ window.fileManager no disponible');
+          
+          if (typeof FileManager !== 'undefined') statuses.push('✅ FileManager class disponible');
+          else statuses.push('❌ FileManager class no disponible');
+          
+          console.log('🔍 Estado del FileManager:', statuses.join(' | '));
+          return statuses;
+        }
+      });
     </script>
   </body>
+</html>

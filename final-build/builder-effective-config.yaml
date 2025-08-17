@@ -1,0 +1,16 @@
+directories:
+  output: final-build
+  buildResources: build
+appId: com.nick.facturador
+productName: Facturador
+files:
+  - filter:
+      - '**/*'
+      - '!node_modules/.cache'
+      - '!.git'
+nodeGypRebuild: false
+npmRebuild: false
+buildDependenciesFromSource: false
+win:
+  target: portable
+electronVersion: 28.3.3
